@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import Landing from "./pages/Landing";
+import { Landing } from "./pages/index";
 
 function App(): ReactElement {
   return (
