@@ -1,4 +1,5 @@
 import React, { FC, useState, useEffect, ReactElement } from "react";
+import { toast } from "react-toastify";
 
 import { Logo, FormRow } from "../components";
 
@@ -15,12 +16,20 @@ const Register: FC = (): ReactElement => {
   const [values, setValues] = useState(initialState);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target);
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setValues({ ...values, [name]: value });
   };
 
   const onSubmit = (e: React.SyntheticEvent): void => {
     e.preventDefault();
-    console.log(e.target);
+
+    const { name, email, password, isMember } = values;
+    // eslint-disable-next-line
+    if (!email || !password || (!isMember && !name)) {
+      toast.error("Please provide fill out all fields");
+    }
   };
 
   const toggleMember = (): void => {
