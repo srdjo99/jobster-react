@@ -5,6 +5,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 import customFetch from "../../utils/axios";
+import {
+  addUserToLocalStorage,
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+} from "../../utils/localStorage";
 
 interface IUserState {
   isLoading: boolean;
@@ -19,7 +24,7 @@ interface IUserFormInputs {
 
 const initialState: IUserState = {
   isLoading: false,
-  user: null,
+  user: getUserFromLocalStorage(),
 };
 
 interface IAxiosMsg {
@@ -79,6 +84,7 @@ const userSlice = createSlice({
       const { user } = action.payload;
       state.isLoading = false;
       state.user = user;
+      addUserToLocalStorage(user);
       toast.success(`Hello there ${user.name}`);
     });
     builder.addCase(registerUser.rejected, (state, { payload }) => {
@@ -94,6 +100,7 @@ const userSlice = createSlice({
       const { user } = action.payload;
       state.isLoading = false;
       state.user = user;
+      addUserToLocalStorage(user);
       toast.success(`Welcome back ${user.name}`);
     });
     builder.addCase(loginUser.rejected, (state, action) => {
