@@ -1,8 +1,10 @@
 import React, { ReactElement } from "react";
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 import { toast } from "react-toastify";
+
+import axios from "axios";
+
+import customFetch from "../../utils/axios";
 
 interface IUserState {
   isLoading: boolean;
@@ -20,10 +22,31 @@ const initialState: IUserState = {
   user: null,
 };
 
+interface IAxiosMsg {
+  msg: string;
+}
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (user: IUserFormInputs, thunkAPI) => {
-    console.log("Register User:", user);
+    try {
+      const resp = await customFetch.post("/auth/testingRegister", user);
+      console.log(resp);
+    } catch (err) {
+      // const error = err as AxiosError;
+      // AxiosError needs to be imported
+
+      // better approach
+      if (axios.isAxiosError(err) && err.response?.data) {
+        // approaches
+        // console.log((err.response.data as IAxiosMsg).msg);
+        // const { msg } = err.response.data as IAxiosMsg;
+
+        toast.error((err.response.data as IAxiosMsg).msg);
+      } else {
+        console.log(err);
+      }
+    }
   },
 );
 
