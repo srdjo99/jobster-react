@@ -6,3 +6,5 @@ export const store = configureStore({
     user: userSlice,
   },
 });
+
+export type AppDispatch = typeof store.dispatch;

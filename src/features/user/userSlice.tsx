@@ -9,10 +9,30 @@ interface IUserState {
   user: any;
 }
 
+interface IUserFormInputs {
+  name?: string;
+  email: string;
+  password: string;
+}
+
 const initialState: IUserState = {
   isLoading: false,
   user: null,
 };
+
+export const registerUser = createAsyncThunk(
+  "user/registerUser",
+  async (user: IUserFormInputs, thunkAPI) => {
+    console.log("Register User:", user);
+  },
+);
+
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async (user: IUserFormInputs, thunkAPI) => {
+    console.log("Login User:", user);
+  },
+);
 
 const userSlice = createSlice({
   name: "user",
