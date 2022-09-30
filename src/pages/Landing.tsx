@@ -1,4 +1,5 @@
 import { FC, ReactElement } from "react";
+import { Link } from "react-router-dom";
 
 import Wrapper from "../assets/wrappers/LandingPage";
 import { Logo } from "../components/index";
@@ -22,7 +23,9 @@ const Landing: FC = (): ReactElement => {
             numquam soluta odit, quia possimus quas excepturi pariatur
             doloremque saepe voluptates.
           </p>
-          <button className="btn btn-hero">Login/Register</button>
+          <Link to="/register" className="btn btn-hero">
+            Login/Register
+          </Link>
         </div>
         <img src={main} alt="successful deal" className="img main-img" />
       </div>
