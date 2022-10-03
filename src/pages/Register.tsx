@@ -7,6 +7,7 @@ import { Logo, FormRow } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { loginUser, registerUser } from "../features/user/userSlice";
 import { AppDispatch } from "../store";
+import { useNavigate } from "react-router-dom";
 
 interface IStoreState {
   user: any;
@@ -24,7 +25,10 @@ const Register: FC = (): ReactElement => {
   const [values, setValues] = useState(initialState);
 
   const { user, isLoading } = useSelector((store: IStoreState) => store.user);
-  const dispatch = useDispatch<any>();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const name = e.target.name;
@@ -43,15 +47,23 @@ const Register: FC = (): ReactElement => {
       return;
     }
     if (isMember) {
-      dispatch(loginUser({ email, password }));
+      void dispatch(loginUser({ email, password }));
       return;
     }
-    dispatch(registerUser({ name, email, password }));
+    void dispatch(registerUser({ name, email, password }));
   };
 
   const toggleMember = (): void => {
     setValues({ ...values, isMember: !values.isMember });
   };
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setTimeout(() => {
+  //       navigate("/");
+  //     }, 2000);
+  //   }
+  // }, [user]);
 
   return (
     <Wrapper className="full-page">

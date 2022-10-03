@@ -36,6 +36,7 @@ export const registerUser = createAsyncThunk(
   async (user: IUserFormInputs, thunkAPI) => {
     try {
       const resp = await customFetch.post("/auth/register", user);
+
       return resp.data;
     } catch (error) {
       // const error = err as AxiosError;
