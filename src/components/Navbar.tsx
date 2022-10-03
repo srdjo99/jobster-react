@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store";
 import Wrapper from "../assets/wrappers/Navbar";
 import Logo from "./Logo";
-import { toggleSidebar } from "../features/user/userSlice";
+import { toggleSidebar, logoutUser } from "../features/user/userSlice";
 
 const Navbar = (): ReactElement => {
   const [showLogout, setShowLogout] = useState(false);
@@ -43,7 +43,7 @@ const Navbar = (): ReactElement => {
             <button
               className="dropdown-btn"
               type="button"
-              onClick={() => console.log("logout user")}
+              onClick={() => dispatch(logoutUser())}
             >
               logout
             </button>
