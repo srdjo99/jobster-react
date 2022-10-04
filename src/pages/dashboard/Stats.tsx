@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 const Stats = (): ReactElement => {
-  return <div>Stats</div>;
+  return <h1>Stats</h1>;
 };
 
 export default Stats;

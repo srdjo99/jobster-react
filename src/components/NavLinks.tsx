@@ -20,6 +20,7 @@ const NavLinks = ({ toggleSidebar }: INavLinksProps): ReactElement => {
               return isActive ? "nav-link active" : "nav-link";
             }}
             onClick={toggleSidebar}
+            end
           >
             <span className="icon">{icon}</span>
             {text}

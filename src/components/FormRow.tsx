@@ -3,7 +3,8 @@ import React, { FC, ReactElement } from "react";
 interface IFormRowProps {
   type: string;
   name: string;
-  value: string;
+  value?: string;
+  labelText?: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -11,12 +12,13 @@ const FormRow: FC<IFormRowProps> = ({
   type,
   name,
   value,
+  labelText,
   handleChange,
 }): ReactElement => {
   return (
     <div className="form-row">
       <label htmlFor={name} className="form-label">
-        {name}
+        {labelText ?? name}
       </label>
       <input
         type={type}
