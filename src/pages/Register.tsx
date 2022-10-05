@@ -50,7 +50,7 @@ const Register: FC = (): ReactElement => {
       void dispatch(loginUser({ email, password }));
       return;
     }
-    void dispatch(registerUser({ name, email, password }));
+    dispatch(registerUser({ name, email, password })) as any;
   };
 
   const toggleMember = (): void => {

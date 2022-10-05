@@ -10,6 +10,11 @@ import {
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
 } from "../../utils/localStorage";
+import {
+  loginUserThunk,
+  registerUserThunk,
+  updateUserThunk,
+} from "./userThunk";
 
 interface IUserState {
   isLoading: boolean;
@@ -19,8 +24,8 @@ interface IUserState {
 
 interface IUserFormInputs {
   name?: string;
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
 }
 
 const initialState: IUserState = {
@@ -33,72 +38,93 @@ interface IAxiosMsg {
   msg: string;
 }
 
+// export const registerUser = createAsyncThunk(
+//   "user/registerUser",
+//   async (user: IUserFormInputs, thunkAPI) => {
+//     try {
+//       const resp = await customFetch.post("/auth/register", user);
+//       return resp.data;
+//     } catch (error) {
+//       // const error = err as AxiosError;
+//       // AxiosError needs to be imported
+
+//       // better approach
+//       if (axios.isAxiosError(error) && error.response?.data) {
+//         // approaches
+//         // console.log((err.response.data as IAxiosMsg).msg);
+//         // const { msg } = err.response.data as IAxiosMsg;
+
+//         return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
+//       } else {
+//         console.log(error);
+//       }
+//     }
+//   },
+// );
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (user: IUserFormInputs, thunkAPI) => {
-    try {
-      const resp = await customFetch.post("/auth/register", user);
-      return resp.data;
-    } catch (error) {
-      // const error = err as AxiosError;
-      // AxiosError needs to be imported
-
-      // better approach
-      if (axios.isAxiosError(error) && error.response?.data) {
-        // approaches
-        // console.log((err.response.data as IAxiosMsg).msg);
-        // const { msg } = err.response.data as IAxiosMsg;
-
-        return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
-      } else {
-        console.log(error);
-      }
-    }
+    return await registerUserThunk({ url: "/auth/register", user, thunkAPI });
   },
 );
+
+// export const loginUser = createAsyncThunk(
+//   "user/loginUser",
+//   async (user: IUserFormInputs, thunkAPI) => {
+//     try {
+//       const resp = await customFetch.post("/auth/login", user);
+//       return resp.data;
+//     } catch (error) {
+//       if (axios.isAxiosError(error) && error.response?.data) {
+//         return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
+//       } else {
+//         console.log(error);
+//       }
+//     }
+//   },
+// );
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (user: IUserFormInputs, thunkAPI) => {
-    try {
-      const resp = await customFetch.post("/auth/login", user);
-      return resp.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
-      } else {
-        console.log(error);
-      }
-    }
+    return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
   },
 );
 
+// export const updateUser = createAsyncThunk(
+//   "user/updateUser",
+//   async (user: any, thunkAPI) => {
+//     try {
+//       const resp = await customFetch.patch("/auth/updateUser", user, {
+//         headers: {
+//           // getState-entire state, user-slice name, user-property name
+//           authorization: `Bearer ${
+//             (thunkAPI.getState() as any).user.user.token
+//           }`,
+//         },
+//       });
+//       return resp.data;
+//     } catch (error) {
+//       if (axios.isAxiosError(error)) {
+//         if (error.response?.status === 401) {
+//           thunkAPI.dispatch(logoutUser());
+//           return thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
+//         }
+//         return thunkAPI.rejectWithValue(
+//           (error.response?.data as IAxiosMsg).msg,
+//         );
+//       } else {
+//         console.log(error);
+//       }
+//     }
+//   },
+// );
+
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async (user: any, thunkAPI) => {
-    try {
-      const resp = await customFetch.patch("/auth/updateUser", user, {
-        headers: {
-          // getState-entire state, user-slice name, user-property name
-          authorization: `Bearer ${
-            (thunkAPI.getState() as any).user.user.token
-          }`,
-        },
-      });
-      return resp.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          thunkAPI.dispatch(logoutUser());
-          return thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
-        }
-        return thunkAPI.rejectWithValue(
-          (error.response?.data as IAxiosMsg).msg,
-        );
-      } else {
-        console.log(error);
-      }
-    }
+  async (user: IUserFormInputs, thunkAPI) => {
+    return await updateUserThunk({ url: "/auth/updateUser", user, thunkAPI });
   },
 );
 

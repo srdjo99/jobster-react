@@ -12,6 +12,7 @@ interface IUserData {
   email?: string;
   lastName?: string;
   location?: string;
+  password?: string;
 }
 
 const Profile = (): ReactElement => {
