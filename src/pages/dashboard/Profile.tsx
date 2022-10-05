@@ -2,9 +2,10 @@ import React, { useState, ReactElement, FormEvent, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
+import { updateUser } from "../../features/user/userSlice";
 
 interface IUserData {
   name?: string;
@@ -16,7 +17,7 @@ interface IUserData {
 const Profile = (): ReactElement => {
   const { isLoading, user } = useSelector((store: RootState) => store.user);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [userData, setUserData] = useState<IUserData>({
     name: user?.name || "",
@@ -32,6 +33,8 @@ const Profile = (): ReactElement => {
     if (!name || !email || !lastName || !location) {
       toast.error("please fill out all fields");
     }
+
+    dispatch(updateUser(userData)) as IUserData;
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {

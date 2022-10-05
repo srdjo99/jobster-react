@@ -38,7 +38,6 @@ export const registerUser = createAsyncThunk(
   async (user: IUserFormInputs, thunkAPI) => {
     try {
       const resp = await customFetch.post("/auth/register", user);
-
       return resp.data;
     } catch (error) {
       // const error = err as AxiosError;
@@ -67,6 +66,35 @@ export const loginUser = createAsyncThunk(
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
         return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
+      } else {
+        console.log(error);
+      }
+    }
+  },
+);
+
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async (user: any, thunkAPI) => {
+    try {
+      const resp = await customFetch.patch("/auth/updateUser", user, {
+        headers: {
+          // getState-entire state, user-slice name, user-property name
+          authorization: `Bearer ${
+            (thunkAPI.getState() as any).user.user.token
+          }`,
+        },
+      });
+      return resp.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          thunkAPI.dispatch(logoutUser());
+          return thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
+        }
+        return thunkAPI.rejectWithValue(
+          (error.response?.data as IAxiosMsg).msg,
+        );
       } else {
         console.log(error);
       }
@@ -118,6 +146,22 @@ const userSlice = createSlice({
     builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
       toast.error(action.payload as string);
+    });
+
+    // update user
+    builder.addCase(updateUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
+      const { user } = payload;
+      state.isLoading = false;
+      state.user = user;
+      addUserToLocalStorage(user);
+      toast.success("User updated!");
+    });
+    builder.addCase(updateUser.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload as string);
     });
   },
 });
