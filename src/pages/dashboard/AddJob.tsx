@@ -2,7 +2,7 @@ import React, { ReactElement, FormEvent, ChangeEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-import { FormRow } from "../../components";
+import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { RootState } from "../../store";
 
@@ -30,7 +30,9 @@ const AddJob = (): ReactElement => {
     // }
   };
 
-  const handleJobInput = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleJobInput = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const name = e.target.name;
     const value = e.target.value;
     console.log(name, value);
@@ -63,6 +65,22 @@ const AddJob = (): ReactElement => {
             value={jobLocation}
             handleChange={handleJobInput}
           />
+          {/* job status */}
+          <FormRowSelect
+            name="status"
+            value={status}
+            handleChange={handleJobInput}
+            list={statusOptions}
+          />
+          {/* job type */}
+          <FormRowSelect
+            name="jobType"
+            labelText="job type"
+            value={jobType}
+            handleChange={handleJobInput}
+            list={jobTypeOptions}
+          />
+
           <div className="btn-container">
             <button
               type="button"
