@@ -3,8 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 import { FormRow, FormRowSelect } from "../../components";
+import { AppDispatch, RootState } from "../../store";
+import { handleChange, clearValues } from "../../features/job/jobSlice";
+
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
-import { RootState } from "../../store";
 
 const AddJob = (): ReactElement => {
   const {
@@ -19,6 +21,7 @@ const AddJob = (): ReactElement => {
     isEditing,
     editJobId,
   } = useSelector((store: RootState) => store.job);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +38,7 @@ const AddJob = (): ReactElement => {
   ) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name, value);
+    dispatch(handleChange({ name, value }));
   };
 
   return (
@@ -85,7 +88,7 @@ const AddJob = (): ReactElement => {
             <button
               type="button"
               className="btn btn-block clear-btn"
-              onClick={() => console.log("clear values")}
+              onClick={() => dispatch(clearValues())}
             >
               clear
             </button>
