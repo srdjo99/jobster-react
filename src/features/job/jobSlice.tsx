@@ -38,7 +38,7 @@ const initialState: IJobState = {
 
 export const createJob = createAsyncThunk(
   "job/createJob",
-  async (job, thunkAPI: any) => {
+  async (job: any, thunkAPI: any) => {
     console.log(thunkAPI, "tAPI");
 
     try {
@@ -69,7 +69,10 @@ const jobSlice = createSlice({
       state[name as keyof IJobKeys] = value;
     },
     clearValues: () => {
-      return initialState;
+      return {
+        ...initialState,
+        jobLocation: getUserFromLocalStorage()?.location || "",
+      };
     },
   },
   extraReducers: (builder) => {

@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 import axios from "axios";
@@ -135,10 +135,13 @@ const userSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    logoutUser: (state) => {
+    logoutUser: (state, action: PayloadAction<string | undefined>) => {
       state.user = null;
       state.isSidebarOpen = false;
       removeUserFromLocalStorage();
+      if (action.payload) {
+        toast.success(action.payload);
+      }
     },
   },
   extraReducers: (builder) => {
