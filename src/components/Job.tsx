@@ -6,7 +6,7 @@ import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from "react-icons/fa";
 import { AppDispatch } from "../store";
 import Wrapper from "../assets/wrappers/Job";
 import JobInfo from "./JobInfo";
-import { deleteJob } from "../features/job/jobSlice";
+import { deleteJob, setEditJob } from "../features/job/jobSlice";
 
 interface IJobProps {
   _id: string;
@@ -52,7 +52,19 @@ const Job = ({
             <Link
               to="/add-job"
               className="btn edit-btn"
-              onClick={() => console.log("edit job")}
+              onClick={() =>
+                dispatch(
+                  setEditJob({
+                    editJobId: _id,
+                    position,
+                    company,
+                    jobLocation,
+                    jobType,
+                    createdAt,
+                    status,
+                  }),
+                )
+              }
             >
               Edit
             </Link>
