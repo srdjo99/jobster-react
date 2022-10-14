@@ -1,9 +1,12 @@
+import moment from "moment";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from "react-icons/fa";
 
-import Wrapper from "../assets/wrappers/Job";
 import { AppDispatch } from "../store";
+import Wrapper from "../assets/wrappers/Job";
+import JobInfo from "./JobInfo";
+import { deleteJob } from "../features/job/jobSlice";
 
 interface IJobProps {
   _id: string;
@@ -26,6 +29,8 @@ const Job = ({
 }: IJobProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
+  const date = moment(createdAt).format("MMM Do, YYYY");
+
   return (
     <Wrapper>
       <header>
@@ -37,7 +42,9 @@ const Job = ({
       </header>
       <div className="content">
         <div className="content-center">
-          <h4>more content</h4>
+          <JobInfo icon={<FaLocationArrow />} text={jobLocation} />
+          <JobInfo icon={<FaCalendarAlt />} text={date} />
+          <JobInfo icon={<FaBriefcase />} text={jobType} />
           <div className={`status ${status}`}>{status}</div>
         </div>
         <footer>
@@ -52,7 +59,9 @@ const Job = ({
             <button
               type="button"
               className="btn delete-btn"
-              onClick={() => console.log("delete job")}
+              onClick={() => {
+                void dispatch(deleteJob(_id));
+              }}
             >
               Delete
             </button>

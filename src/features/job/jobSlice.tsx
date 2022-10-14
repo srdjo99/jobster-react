@@ -6,6 +6,7 @@ import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
 import { AppDispatch, RootState } from "../../store";
 import { logoutUser } from "../user/userSlice";
+import { showLoading, hideLoading, getAllJobs } from "../allJobs/allJobsSlice";
 
 interface IJobKeys {
   status: string;
@@ -60,6 +61,26 @@ export const createJob = createAsyncThunk(
   },
 );
 
+export const deleteJob = createAsyncThunk(
+  "job/deleteJob",
+  async (jobId: any, thunkAPI: any) => {
+    thunkAPI.dispatch(showLoading());
+    console.log(jobId, thunkAPI, "ss");
+    try {
+      const resp = await customFetch.delete(`/jobs/${jobId}`, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+        },
+      });
+      thunkAPI.dispatch(getAllJobs());
+      return resp.data.msg;
+    } catch (error: any) {
+      thunkAPI.dispatch(hideLoading());
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  },
+);
+
 const jobSlice = createSlice({
   name: "job",
   initialState,
@@ -85,6 +106,12 @@ const jobSlice = createSlice({
     });
     builder.addCase(createJob.rejected, (state, { payload }) => {
       state.isLoading = false;
+      toast.error(payload as any);
+    });
+    builder.addCase(deleteJob.fulfilled, (state, { payload }) => {
+      toast.success(payload);
+    });
+    builder.addCase(deleteJob.rejected, (state, { payload }) => {
       toast.error(payload as any);
     });
   },
