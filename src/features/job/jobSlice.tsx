@@ -1,32 +1,21 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
-import { AppDispatch, RootState } from "../../store";
 import { logoutUser } from "../user/userSlice";
 import { showLoading, hideLoading, getAllJobs } from "../allJobs/allJobsSlice";
 
-interface IErrorMsg {
-  msg?: string;
-}
-
-interface IJobKeys {
-  status?: string;
-  position?: string;
-  company?: string;
-  jobLocation?: string;
-  jobType?: string;
-}
-
-interface IJobState extends IJobKeys {
-  isLoading?: boolean;
-  isEditing?: boolean;
-  editJobId?: string;
-  jobTypeOptions?: string[];
-  statusOptions?: string[];
-}
+import {
+  IErrorMsg,
+  IJobKeys,
+  IJobState,
+  ICreateJob,
+  IThunkAPI,
+  IResponseData,
+  IEditJob,
+} from "../../types/IJobSlice";
 
 const initialState: IJobState = {
   isLoading: false,
@@ -40,36 +29,6 @@ const initialState: IJobState = {
   isEditing: false,
   editJobId: "",
 };
-
-interface ICreateJob {
-  position: string;
-  company: string;
-  jobLocation: string;
-  jobType: string;
-  status: string;
-}
-
-interface IThunkAPI {
-  state: RootState;
-  dispatch: AppDispatch;
-  getState: () => RootState;
-  rejectWithValue: (msg: string | undefined) => void;
-}
-
-interface IResponseData {
-  job: {
-    company: string;
-    createdAt: string;
-    createdBy: string;
-    jobLocation: string;
-    jobType: string;
-    position: string;
-    status: string;
-    updatedAt: string;
-    __v: number;
-    _id: string;
-  };
-}
 
 export const createJob = createAsyncThunk<
   IResponseData | undefined,
@@ -122,11 +81,6 @@ export const deleteJob = createAsyncThunk<string, string, IThunkAPI>(
     }
   },
 );
-
-interface IEditJob {
-  jobId: string;
-  job: IJobState;
-}
 
 export const editJob = createAsyncThunk<string, IEditJob, IThunkAPI>(
   "job/editJob",
