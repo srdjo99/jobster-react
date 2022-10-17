@@ -12,6 +12,7 @@ import {
   IJobKeys,
   IJobState,
   IJobTypes,
+  IJobValues,
   IThunkAPI,
   IResponseData,
   IEditJob,
@@ -37,13 +38,13 @@ export const createJob = createAsyncThunk<
   IThunkAPI
 >("job/createJob", async (job, thunkAPI) => {
   try {
-    const resp = await customFetch.post<IResponseData>("/jobs", job, {
+    const { data } = await customFetch.post<IResponseData>("/jobs", job, {
       headers: {
         authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
       },
     });
     thunkAPI.dispatch(clearValues());
-    return resp.data;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
@@ -59,41 +60,52 @@ export const createJob = createAsyncThunk<
   }
 });
 
-export const deleteJob = createAsyncThunk<
-  string | undefined,
-  string,
-  IThunkAPI
->("job/deleteJob", async (jobId, thunkAPI) => {
-  thunkAPI.dispatch(showLoading());
-  try {
-    const { data } = await customFetch.delete<IResponseMsg>(`/jobs/${jobId}`, {
-      headers: {
-        authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-      },
-    });
-    thunkAPI.dispatch(getAllJobs());
-    return data.msg;
-  } catch (error) {
-    thunkAPI.dispatch(hideLoading());
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const { msg }: IErrorMsg = error.response.data;
-      return thunkAPI.rejectWithValue(msg);
+export const deleteJob = createAsyncThunk<IResponseMsg, string, IThunkAPI>(
+  "job/deleteJob",
+  async (jobId, thunkAPI) => {
+    thunkAPI.dispatch(showLoading());
+    try {
+      const { data } = await customFetch.delete<IResponseMsg>(
+        `/jobs/${jobId}`,
+        {
+          headers: {
+            authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+          },
+        },
+      );
+      thunkAPI.dispatch(getAllJobs());
+      return data;
+    } catch (error) {
+      thunkAPI.dispatch(hideLoading());
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const { msg }: IErrorMsg = error.response.data;
+        return thunkAPI.rejectWithValue(msg);
+      }
+      console.log(error);
+      throw error;
     }
-    console.log(error);
-  }
-});
+  },
+);
 
-export const editJob = createAsyncThunk<string, IEditJob, IThunkAPI>(
+interface IUpdatedJob {
+  updatedJob?: IJobValues;
+}
+
+export const editJob = createAsyncThunk<IUpdatedJob, IEditJob, IThunkAPI>(
   "job/editJob",
   async ({ jobId, job }, thunkAPI) => {
     try {
-      const resp = await customFetch.patch(`/jobs/${jobId}`, job, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+      const { data } = await customFetch.patch<IUpdatedJob>(
+        `/jobs/${jobId}`,
+        job,
+        {
+          headers: {
+            authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+          },
         },
-      });
+      );
       thunkAPI.dispatch(clearValues());
-      return resp.data.msg;
+      return data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
         const { msg }: IErrorMsg = error.response?.data;
@@ -136,9 +148,7 @@ const jobSlice = createSlice({
       toast.error(payload as string);
     });
     builder.addCase(deleteJob.fulfilled, (state, { payload }) => {
-      console.log(payload, "payload");
-
-      // toast.success(payload);
+      toast.success(payload?.msg);
     });
     builder.addCase(deleteJob.rejected, (state, { payload }) => {
       toast.error(payload as string);

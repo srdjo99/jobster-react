@@ -26,20 +26,21 @@ interface IEditJob {
   job: IJobState;
 }
 
+interface IJobValues {
+  company?: string;
+  createdAt?: string;
+  createdBy?: string;
+  jobLocation?: string;
+  jobType?: string;
+  position?: string;
+  status?: string;
+  updatedAt?: string;
+  __v?: number;
+  _id?: string;
+}
+
 interface IResponseData {
-  job: {
-    company: string;
-    createdAt: string;
-    createdBy: string;
-    jobLocation: string;
-    jobType: string;
-    position: string;
-    status: string;
-    updatedAt: string;
-    __v: number;
-    _id: string;
-    jobs?: any;
-  };
+  job: IJobValues;
 }
 
 interface IAllJobsResponse {
@@ -47,11 +48,11 @@ interface IAllJobsResponse {
 }
 
 interface IJobTypes {
-  position: string;
-  company: string;
-  jobLocation: string;
-  jobType: string;
-  status: string;
+  position?: string;
+  company?: string;
+  jobLocation?: string;
+  jobType?: string;
+  status?: string;
 }
 
 interface IThunkAPI {
@@ -67,6 +68,7 @@ export type {
   IErrorMsg,
   IJobKeys,
   IJobState,
+  IJobValues,
   IEditJob,
   IResponseData,
   IResponseMsg,
