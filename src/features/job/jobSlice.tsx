@@ -79,7 +79,7 @@ export const createJob = createAsyncThunk<
   try {
     const resp = await customFetch.post("/jobs", job, {
       headers: {
-        authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+        authorization: `Berer ${thunkAPI.getState().user.user.token}`,
       },
     });
     thunkAPI.dispatch(clearValues());
@@ -145,6 +145,7 @@ export const editJob = createAsyncThunk<string, IEditJob, IThunkAPI>(
         return thunkAPI.rejectWithValue(msg);
       }
       console.log(error);
+      throw error;
     }
   },
 );
@@ -177,13 +178,14 @@ const jobSlice = createSlice({
     });
     builder.addCase(createJob.rejected, (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload as any);
+      toast.error(payload as string);
+      // toast.error(action.payload as string);
     });
     builder.addCase(deleteJob.fulfilled, (state, { payload }) => {
       toast.success(payload);
     });
     builder.addCase(deleteJob.rejected, (state, { payload }) => {
-      toast.error(payload as any);
+      toast.error(payload as string);
     });
     builder.addCase(editJob.pending, (state) => {
       state.isLoading = true;
@@ -194,7 +196,7 @@ const jobSlice = createSlice({
     });
     builder.addCase(editJob.rejected, (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload as any);
+      toast.error(payload as string);
     });
   },
 });
