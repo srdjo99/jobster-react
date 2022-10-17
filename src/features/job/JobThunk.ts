@@ -4,25 +4,7 @@ import { clearValues } from "./jobSlice";
 import customFetch from "../../utils/axios";
 import { logoutUser } from "../user/userSlice";
 import { AppDispatch, RootState } from "../../store";
-
-interface IJobTypes {
-  position?: string;
-  company?: string;
-  jobLocation?: string;
-  jobType?: string;
-  status?: string;
-}
-
-interface IThunkAPI {
-  state: RootState;
-  dispatch: AppDispatch;
-  getState: () => RootState;
-  rejectWithValue: (msg: string | undefined) => void;
-}
-
-interface IErrorMsg {
-  msg?: string;
-}
+import { IJobTypes, IThunkAPI, IErrorMsg } from "../../types/IJob";
 
 export const createJobThunk = async (job: IJobTypes, thunkAPI: IThunkAPI) => {
   try {
@@ -44,15 +26,5 @@ export const createJobThunk = async (job: IJobTypes, thunkAPI: IThunkAPI) => {
       }
       console.log(error);
     }
-    // if (error instanceof Error) {
-    //   const { msg } = error.response?.data;
-    // }
-    // if (axios.isAxiosError(error) && error.response?.status === 401) {
-    //   thunkAPI.dispatch(logoutUser());
-    //   return thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
-    // } else {
-    //   const { msg } = error.response.data;
-    //   return thunkAPI.rejectWithValue("");
-    // }
   }
 };

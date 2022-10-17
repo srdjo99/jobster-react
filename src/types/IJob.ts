@@ -35,10 +35,15 @@ interface IResponseData {
     updatedAt: string;
     __v: number;
     _id: string;
+    jobs?: any;
   };
 }
 
-interface ICreateJob {
+interface IAllJobsResponse {
+  jobs: IResponseData[];
+}
+
+interface IJobTypes {
   position: string;
   company: string;
   jobLocation: string;
@@ -55,10 +60,11 @@ interface IThunkAPI {
 
 export type {
   IThunkAPI,
-  ICreateJob,
+  IJobTypes,
   IErrorMsg,
   IJobKeys,
   IJobState,
   IEditJob,
   IResponseData,
+  IAllJobsResponse,
 };

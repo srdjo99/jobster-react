@@ -11,11 +11,11 @@ import {
   IErrorMsg,
   IJobKeys,
   IJobState,
-  ICreateJob,
+  IJobTypes,
   IThunkAPI,
   IResponseData,
   IEditJob,
-} from "../../types/IJobSlice";
+} from "../../types/IJob";
 
 const initialState: IJobState = {
   isLoading: false,
@@ -32,13 +32,13 @@ const initialState: IJobState = {
 
 export const createJob = createAsyncThunk<
   IResponseData | undefined,
-  ICreateJob,
+  IJobTypes,
   IThunkAPI
 >("job/createJob", async (job, thunkAPI) => {
   try {
     const resp = await customFetch.post("/jobs", job, {
       headers: {
-        authorization: `Berer ${thunkAPI.getState().user.user.token}`,
+        authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
       },
     });
     thunkAPI.dispatch(clearValues());
@@ -133,7 +133,6 @@ const jobSlice = createSlice({
     builder.addCase(createJob.rejected, (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload as string);
-      // toast.error(action.payload as string);
     });
     builder.addCase(deleteJob.fulfilled, (state, { payload }) => {
       toast.success(payload);
