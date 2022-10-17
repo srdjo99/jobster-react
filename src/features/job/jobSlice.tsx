@@ -81,6 +81,23 @@ export const deleteJob = createAsyncThunk(
   },
 );
 
+export const editJob = createAsyncThunk(
+  "job/editJob",
+  async ({ jobId, job }: any, thunkAPI: any) => {
+    try {
+      const resp = await customFetch.patch(`/jobs/${jobId}`, job, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+        },
+      });
+      thunkAPI.dispatch(clearValues());
+      return resp.data.msg;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  },
+);
+
 const jobSlice = createSlice({
   name: "job",
   initialState,
@@ -115,6 +132,17 @@ const jobSlice = createSlice({
       toast.success(payload);
     });
     builder.addCase(deleteJob.rejected, (state, { payload }) => {
+      toast.error(payload as any);
+    });
+    builder.addCase(editJob.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(editJob.fulfilled, (state) => {
+      state.isLoading = false;
+      toast.success("Job modified...");
+    });
+    builder.addCase(editJob.rejected, (state, { payload }) => {
+      state.isLoading = false;
       toast.error(payload as any);
     });
   },
