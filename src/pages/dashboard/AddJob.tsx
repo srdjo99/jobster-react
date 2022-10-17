@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 import { FormRow, FormRowSelect } from "../../components";
-import { AppDispatch, RootState } from "../../store";
+import { useAppDispatch, RootState } from "../../store";
 import {
   handleChange,
   clearValues,
@@ -27,7 +27,7 @@ const AddJob = (): ReactElement => {
     editJobId,
   } = useSelector((store: RootState) => store.job);
   const { user } = useSelector((store: RootState) => store.user);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -51,9 +51,7 @@ const AddJob = (): ReactElement => {
       return;
     }
 
-    dispatch(
-      createJob({ position, company, jobLocation, jobType, status }),
-    ) as any;
+    dispatch(createJob({ position, company, jobLocation, jobType, status }));
   };
 
   const handleJobInput = (

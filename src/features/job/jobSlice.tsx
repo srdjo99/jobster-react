@@ -8,20 +8,24 @@ import { AppDispatch, RootState } from "../../store";
 import { logoutUser } from "../user/userSlice";
 import { showLoading, hideLoading, getAllJobs } from "../allJobs/allJobsSlice";
 
+interface IErrorMsg {
+  msg?: string;
+}
+
 interface IJobKeys {
-  status: string;
-  position: string;
-  company: string;
-  jobLocation: string;
-  jobType: string;
+  status?: string;
+  position?: string;
+  company?: string;
+  jobLocation?: string;
+  jobType?: string;
 }
 
 interface IJobState extends IJobKeys {
-  isLoading: boolean;
-  isEditing: boolean;
-  editJobId: string;
-  jobTypeOptions: string[];
-  statusOptions: string[];
+  isLoading?: boolean;
+  isEditing?: boolean;
+  editJobId?: string;
+  jobTypeOptions?: string[];
+  statusOptions?: string[];
 }
 
 const initialState: IJobState = {
@@ -37,33 +41,67 @@ const initialState: IJobState = {
   editJobId: "",
 };
 
-export const createJob = createAsyncThunk(
-  "job/createJob",
-  async (job: any, thunkAPI: any) => {
-    console.log(thunkAPI, "tAPI");
+interface ICreateJob {
+  position: string;
+  company: string;
+  jobLocation: string;
+  jobType: string;
+  status: string;
+}
 
-    try {
-      const resp = await customFetch.post("/jobs", job, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
-      thunkAPI.dispatch(clearValues());
-      return resp.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
+interface IThunkAPI {
+  state: RootState;
+  dispatch: AppDispatch;
+  getState: () => RootState;
+  rejectWithValue: (msg: string | undefined) => void;
+}
+
+interface IResponseData {
+  job: {
+    company: string;
+    createdAt: string;
+    createdBy: string;
+    jobLocation: string;
+    jobType: string;
+    position: string;
+    status: string;
+    updatedAt: string;
+    __v: number;
+    _id: string;
+  };
+}
+
+export const createJob = createAsyncThunk<
+  IResponseData | undefined,
+  ICreateJob,
+  IThunkAPI
+>("job/createJob", async (job, thunkAPI) => {
+  try {
+    const resp = await customFetch.post("/jobs", job, {
+      headers: {
+        authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+      },
+    });
+    thunkAPI.dispatch(clearValues());
+    return resp.data as IResponseData;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
         thunkAPI.dispatch(logoutUser());
         return thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
-      } else {
-        console.log(error);
       }
+      if (error.response?.data) {
+        const { msg }: IErrorMsg = error.response?.data;
+        return thunkAPI.rejectWithValue(msg);
+      }
+      console.log(error);
     }
-  },
-);
+  }
+});
 
-export const deleteJob = createAsyncThunk(
+export const deleteJob = createAsyncThunk<string, string, IThunkAPI>(
   "job/deleteJob",
-  async (jobId: any, thunkAPI: any) => {
+  async (jobId, thunkAPI: any) => {
     thunkAPI.dispatch(showLoading());
     console.log(jobId, thunkAPI, "ss");
     try {
@@ -73,17 +111,26 @@ export const deleteJob = createAsyncThunk(
         },
       });
       thunkAPI.dispatch(getAllJobs());
-      return resp.data.msg;
-    } catch (error: any) {
+      return resp.data.msg as string;
+    } catch (error) {
       thunkAPI.dispatch(hideLoading());
-      return thunkAPI.rejectWithValue(error.response.data);
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const { msg }: IErrorMsg = error.response.data;
+        return thunkAPI.rejectWithValue(msg);
+      }
+      console.log(error);
     }
   },
 );
 
-export const editJob = createAsyncThunk(
+interface IEditJob {
+  jobId: string;
+  job: IJobState;
+}
+
+export const editJob = createAsyncThunk<string, IEditJob, IThunkAPI>(
   "job/editJob",
-  async ({ jobId, job }: any, thunkAPI: any) => {
+  async ({ jobId, job }, thunkAPI) => {
     try {
       const resp = await customFetch.patch(`/jobs/${jobId}`, job, {
         headers: {
@@ -92,8 +139,12 @@ export const editJob = createAsyncThunk(
       });
       thunkAPI.dispatch(clearValues());
       return resp.data.msg;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const { msg }: IErrorMsg = error.response?.data;
+        return thunkAPI.rejectWithValue(msg);
+      }
+      console.log(error);
     }
   },
 );
