@@ -3,6 +3,9 @@ import { AppDispatch, RootState } from "../store";
 interface IErrorMsg {
   msg?: string;
 }
+interface IResponseMsg {
+  msg?: string;
+}
 interface IJobKeys {
   status?: string;
   position?: string;
@@ -66,5 +69,6 @@ export type {
   IJobState,
   IEditJob,
   IResponseData,
+  IResponseMsg,
   IAllJobsResponse,
 };

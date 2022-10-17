@@ -1,7 +1,8 @@
 import axios from "axios";
 
-import { logoutUser } from "./userSlice";
 import customFetch from "../../utils/axios";
+import { logoutUser } from "./userSlice";
+import { IErrorMsg, IThunkAPI } from "../../types/IJob";
 
 interface IUserThunkArgs {
   url: string;

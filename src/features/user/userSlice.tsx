@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 import customFetch from "../../utils/axios";
+import { IThunkAPI } from "../../types/IJob";
 import {
   addUserToLocalStorage,
   getUserFromLocalStorage,
