@@ -14,6 +14,12 @@ interface IStoreState {
   isLoading: boolean;
 }
 
+interface IUserFormInputs {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
 const initialState = {
   name: "",
   email: "",
@@ -30,14 +36,14 @@ const Register: FC = (): ReactElement => {
 
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
     const value = e.target.value;
 
     setValues({ ...values, [name]: value });
   };
 
-  const onSubmit = (e: React.SyntheticEvent): void => {
+  const onSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     const { name, email, password, isMember } = values;
@@ -47,13 +53,13 @@ const Register: FC = (): ReactElement => {
       return;
     }
     if (isMember) {
-      void dispatch(loginUser({ email, password }));
+      dispatch(loginUser({ email, password }));
       return;
     }
-    dispatch(registerUser({ name, email, password })) as any;
+    dispatch(registerUser({ name, email, password }));
   };
 
-  const toggleMember = (): void => {
+  const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
   };
 

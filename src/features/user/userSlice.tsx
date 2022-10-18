@@ -16,6 +16,7 @@ import {
   registerUserThunk,
   updateUserThunk,
 } from "./userThunk";
+import { stringify } from "querystring";
 
 interface IUserState {
   isLoading: boolean;
@@ -39,88 +40,35 @@ interface IAxiosMsg {
   msg: string;
 }
 
-// export const registerUser = createAsyncThunk(
-//   "user/registerUser",
-//   async (user: IUserFormInputs, thunkAPI) => {
-//     try {
-//       const resp = await customFetch.post("/auth/register", user);
-//       return resp.data;
-//     } catch (error) {
-//       // const error = err as AxiosError;
-//       // AxiosError needs to be imported
+interface IUserResponse {
+  user: {
+    email: string;
+    name: string;
+    lastName: string;
+    location: string;
+    token: string;
+  };
+}
 
-//       // better approach
-//       if (axios.isAxiosError(error) && error.response?.data) {
-//         // approaches
-//         // console.log((err.response.data as IAxiosMsg).msg);
-//         // const { msg } = err.response.data as IAxiosMsg;
+export const registerUser = createAsyncThunk<
+  IUserResponse,
+  IUserFormInputs,
+  IThunkAPI
+>("user/registerUser", async (user, thunkAPI) => {
+  return await registerUserThunk({
+    url: "/auth/register",
+    user,
+    thunkAPI,
+  });
+});
 
-//         return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
-//       } else {
-//         console.log(error);
-//       }
-//     }
-//   },
-// );
-
-export const registerUser = createAsyncThunk(
-  "user/registerUser",
-  async (user: IUserFormInputs, thunkAPI) => {
-    return await registerUserThunk({ url: "/auth/register", user, thunkAPI });
-  },
-);
-
-// export const loginUser = createAsyncThunk(
-//   "user/loginUser",
-//   async (user: IUserFormInputs, thunkAPI) => {
-//     try {
-//       const resp = await customFetch.post("/auth/login", user);
-//       return resp.data;
-//     } catch (error) {
-//       if (axios.isAxiosError(error) && error.response?.data) {
-//         return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
-//       } else {
-//         console.log(error);
-//       }
-//     }
-//   },
-// );
-
-export const loginUser = createAsyncThunk(
-  "user/loginUser",
-  async (user: IUserFormInputs, thunkAPI) => {
-    return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
-  },
-);
-
-// export const updateUser = createAsyncThunk(
-//   "user/updateUser",
-//   async (user: any, thunkAPI) => {
-//     try {
-//       const resp = await customFetch.patch("/auth/updateUser", user, {
-//         headers: {
-//           // getState-entire state, user-slice name, user-property name
-//           authorization: `Bearer ${
-//             (thunkAPI.getState() as any).user.user.token
-//           }`,
-//         },
-//       });
-//       return resp.data;
-//     } catch (error) {
-//       if (axios.isAxiosError(error)) {
-//         if (error.response?.status === 401) {
-//           thunkAPI.dispatch(logoutUser());
-//           return thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
-//         }
-//         return thunkAPI.rejectWithValue(
-//           (error.response?.data as IAxiosMsg).msg,
-//         );
-//       } else {
-//         console.log(error);
-//       }
-//     }
-//   },
-// );
+export const loginUser = createAsyncThunk<
+  IUserResponse,
+  IUserFormInputs,
+  IThunkAPI
+>("user/loginUser", async (user, thunkAPI) => {
+  return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
+});
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",

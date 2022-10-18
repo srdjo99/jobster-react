@@ -2,16 +2,40 @@ import axios from "axios";
 
 import customFetch from "../../utils/axios";
 import { logoutUser } from "./userSlice";
-import { IErrorMsg, IThunkAPI } from "../../types/IJob";
+import { IErrorMsg } from "../../types/IJob";
+import { AppDispatch, RootState } from "../../store";
 
 interface IUserThunkArgs {
   url: string;
-  user: any;
-  thunkAPI: any;
+  user: IUserFormInputs;
+  thunkAPI: IThunkAPI;
 }
 
 interface IAxiosMsg {
   msg: string;
+}
+
+interface IUserFormInputs {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
+interface IThunkAPI {
+  state?: RootState;
+  dispatch: AppDispatch;
+  getState: () => RootState;
+  rejectWithValue: (msg?: string) => void;
+}
+
+interface IUserResponse {
+  user: {
+    email: string;
+    name: string;
+    lastName: string;
+    location: string;
+    token: string;
+  };
 }
 
 export const registerUserThunk = async ({
@@ -20,14 +44,14 @@ export const registerUserThunk = async ({
   thunkAPI,
 }: IUserThunkArgs) => {
   try {
-    const resp = await customFetch.post(url, user);
-    return resp.data;
+    const { data } = await customFetch.post<IUserResponse>(url, user);
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
-    } else {
-      console.log(error);
+      const { msg }: IErrorMsg = error.response.data;
+      thunkAPI.rejectWithValue(msg);
     }
+    throw error;
   }
 };
 
@@ -37,22 +61,18 @@ export const loginUserThunk = async ({
   thunkAPI,
 }: IUserThunkArgs) => {
   try {
-    const resp = await customFetch.post(url, user);
+    const resp = await customFetch.post<IUserResponse>(url, user);
+    console.log(resp);
     return resp.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      return thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
-    } else {
-      console.log(error);
+      thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
     }
+    throw error;
   }
 };
 
-export const updateUserThunk = async ({
-  url,
-  user,
-  thunkAPI,
-}: IUserThunkArgs) => {
+export const updateUserThunk = async ({ url, user, thunkAPI }: any) => {
   try {
     const resp = await customFetch.patch(url, user, {
       headers: {
