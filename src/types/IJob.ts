@@ -4,7 +4,7 @@ interface IErrorMsg {
   msg?: string;
 }
 interface IResponseMsg {
-  msg?: string;
+  msg: string;
 }
 interface IJobKeys {
   status?: string;
@@ -22,10 +22,12 @@ interface IJobState extends IJobKeys {
   statusOptions?: string[];
 }
 interface IEditJob {
-  jobId: string;
-  job: IJobState;
+  jobId?: string;
+  job?: IJobState;
 }
-
+interface IResponseData {
+  job: IJobValues;
+}
 interface IJobValues {
   company?: string;
   createdAt?: string;
@@ -37,10 +39,6 @@ interface IJobValues {
   updatedAt?: string;
   __v?: number;
   _id?: string;
-}
-
-interface IResponseData {
-  job: IJobValues;
 }
 
 interface IAllJobsResponse {
@@ -55,11 +53,15 @@ interface IJobTypes {
   status?: string;
 }
 
+interface IUpdatedJob {
+  updatedJob: IJobValues;
+}
+
 interface IThunkAPI {
   state: RootState;
   dispatch: AppDispatch;
   getState: () => RootState;
-  rejectWithValue: (msg: string | undefined) => void;
+  rejectWithValue: (msg?: string) => void;
 }
 
 export type {
@@ -70,6 +72,7 @@ export type {
   IJobState,
   IJobValues,
   IEditJob,
+  IUpdatedJob,
   IResponseData,
   IResponseMsg,
   IAllJobsResponse,
