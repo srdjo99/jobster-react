@@ -15,7 +15,7 @@ const Navbar = (): ReactElement => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const toggle = (): void => {
+  const toggle = () => {
     dispatch(toggleSidebar());
   };
 
@@ -43,7 +43,10 @@ const Navbar = (): ReactElement => {
             <button
               className="dropdown-btn"
               type="button"
-              onClick={() => dispatch(logoutUser("Logging out..."))}
+              onClick={() => {
+                const msg: string = "Loggin out...";
+                dispatch(logoutUser(msg));
+              }}
             >
               logout
             </button>

@@ -38,7 +38,7 @@ export const createJob = createAsyncThunk<IResponseData, IJobTypes, IThunkAPI>(
     try {
       const { data } = await customFetch.post<IResponseData>("/jobs", job, {
         headers: {
-          authorization: `Beaer ${thunkAPI.getState().user.user.token}`,
+          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
         },
       });
       thunkAPI.dispatch(clearValues());

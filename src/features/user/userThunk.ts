@@ -5,7 +5,7 @@ import { logoutUser } from "./userSlice";
 import { IErrorMsg } from "../../types/IJob";
 import { AppDispatch, RootState } from "../../store";
 
-interface IUserThunkArgs {
+interface IUserThunkParams {
   url: string;
   user: IUserFormInputs;
   thunkAPI: IThunkAPI;
@@ -42,7 +42,7 @@ export const registerUserThunk = async ({
   url,
   user,
   thunkAPI,
-}: IUserThunkArgs) => {
+}: IUserThunkParams) => {
   try {
     const { data } = await customFetch.post<IUserResponse>(url, user);
     return data;
@@ -59,36 +59,39 @@ export const loginUserThunk = async ({
   url,
   user,
   thunkAPI,
-}: IUserThunkArgs) => {
+}: IUserThunkParams) => {
   try {
     const resp = await customFetch.post<IUserResponse>(url, user);
-    console.log(resp);
     return resp.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
-      thunkAPI.rejectWithValue((error.response.data as IAxiosMsg).msg);
+      const { msg }: IErrorMsg = error.response.data;
+      thunkAPI.rejectWithValue(msg);
     }
     throw error;
   }
 };
 
-export const updateUserThunk = async ({ url, user, thunkAPI }: any) => {
+export const updateUserThunk = async ({
+  url,
+  user,
+  thunkAPI,
+}: IUserThunkParams) => {
   try {
-    const resp = await customFetch.patch(url, user, {
+    const { data } = await customFetch.patch<IUserResponse>(url, user, {
       headers: {
         authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
       },
     });
-    return resp.data;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         thunkAPI.dispatch(logoutUser());
-        return thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
+        thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
       }
-      return thunkAPI.rejectWithValue((error.response?.data as IAxiosMsg).msg);
-    } else {
-      console.log(error);
+      thunkAPI.rejectWithValue((error.response?.data as IAxiosMsg).msg);
     }
+    throw error;
   }
 };

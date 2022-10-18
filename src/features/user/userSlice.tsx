@@ -16,7 +16,6 @@ import {
   registerUserThunk,
   updateUserThunk,
 } from "./userThunk";
-import { stringify } from "querystring";
 
 interface IUserState {
   isLoading: boolean;
@@ -70,12 +69,13 @@ export const loginUser = createAsyncThunk<
   return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
 });
 
-export const updateUser = createAsyncThunk(
-  "user/updateUser",
-  async (user: IUserFormInputs, thunkAPI) => {
-    return await updateUserThunk({ url: "/auth/updateUser", user, thunkAPI });
-  },
-);
+export const updateUser = createAsyncThunk<
+  IUserResponse,
+  IUserFormInputs,
+  IThunkAPI
+>("user/updateUser", async (user, thunkAPI) => {
+  return await updateUserThunk({ url: "/auth/updateUser", user, thunkAPI });
+});
 
 const userSlice = createSlice({
   name: "user",
@@ -84,13 +84,12 @@ const userSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    logoutUser: (state, action: PayloadAction<string | undefined>) => {
+    // eslint-disable-next-line
+    logoutUser: (state, { payload }: PayloadAction<string | undefined>) => {
       state.user = null;
       state.isSidebarOpen = false;
       removeUserFromLocalStorage();
-      if (action.payload) {
-        toast.success(action.payload);
-      }
+      toast.success(payload);
     },
   },
   extraReducers: (builder) => {
