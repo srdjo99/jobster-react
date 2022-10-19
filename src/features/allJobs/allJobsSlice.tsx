@@ -8,6 +8,8 @@ import {
   IAllJobsResponse,
   IThunkAPI,
 } from "../../types/IAllJobs";
+import { IStats } from "../../types/IStats";
+import { Stats } from "../../pages/dashboard";
 
 const initialFiltersState: IAllJobsFilters = {
   search: "",
@@ -37,23 +39,21 @@ export const getAllJobs = createAsyncThunk<
   let url = `/jobs`;
   try {
     const { data } = await customFetch.get<IAllJobsResponse>(url);
-    console.log(data, "dataaaaaaaaaa");
-
     return data;
   } catch (error) {
     return thunkAPI.rejectWithValue("There was an error");
   }
 });
 
-export const showStats = createAsyncThunk(
+export const showStats = createAsyncThunk<IStats, undefined>(
   "allJobs/showStats",
   async (_, thunkAPI) => {
     try {
-      const resp = await customFetch.get("/jobs/stats");
-      console.log(resp.data);
-      return resp.data;
+      const { data } = await customFetch.get<IStats>("/jobs/stats");
+      return data;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   },
 );
@@ -69,6 +69,7 @@ const allJobsSlice = createSlice({
       state.isLoading = false;
     },
   },
+  // all jobs
   extraReducers: (builder) => {
     builder.addCase(getAllJobs.pending, (state) => {
       state.isLoading = true;
@@ -78,6 +79,19 @@ const allJobsSlice = createSlice({
       state.jobs = action.payload.jobs;
     });
     builder.addCase(getAllJobs.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload as string);
+    });
+    // stats
+    builder.addCase(showStats.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(showStats.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.stats = payload.defaultStats;
+      state.monthlyApplications = payload.monthlyApplications;
+    });
+    builder.addCase(showStats.rejected, (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload as string);
     });
