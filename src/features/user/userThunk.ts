@@ -52,11 +52,6 @@ export const updateUserThunk = async (
     const { data } = await customFetch.patch<IUserResponse>(
       "/auth/updateUser",
       user,
-      {
-        headers: {
-          authorization: `Bearer ${getState().user.user?.token}`,
-        },
-      },
     );
     return data.user;
   } catch (error) {

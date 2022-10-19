@@ -36,11 +36,7 @@ export const getAllJobs = createAsyncThunk<
   // eslint-disable-next-line
   let url = `/jobs`;
   try {
-    const { data } = await customFetch.get<IAllJobsResponse>(url, {
-      headers: {
-        authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-      },
-    });
+    const { data } = await customFetch.get<IAllJobsResponse>(url);
     console.log(data, "dataaaaaaaaaa");
 
     return data;

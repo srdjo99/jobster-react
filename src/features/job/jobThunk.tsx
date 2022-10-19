@@ -20,20 +20,9 @@ interface IThunkAPI {
   rejectWithValue: (msg?: string) => void;
 }
 
-// interface ICreateThunkAPI {
-//   state?: RootState;
-//   dispatch: AppDispatch;
-//   getState: () => RootState;
-//   rejectWithValue: (msg?: string) => void;
-// }
-
 export const createJobThunk = async (job: IJobTypes, thunkAPI: IThunkAPI) => {
   try {
-    const { data } = await customFetch.post<IResponseData>("/jobs", job, {
-      headers: {
-        authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-      },
-    });
+    const { data } = await customFetch.post<IResponseData>("/jobs", job);
     thunkAPI.dispatch(clearValues());
     return data;
   } catch (error) {
@@ -53,11 +42,7 @@ export const createJobThunk = async (job: IJobTypes, thunkAPI: IThunkAPI) => {
 export const deleteJobThunk = async (jobId: string, thunkAPI: IThunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const { data } = await customFetch.delete<IResponseMsg>(`/jobs/${jobId}`, {
-      headers: {
-        authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-      },
-    });
+    const { data } = await customFetch.delete<IResponseMsg>(`/jobs/${jobId}`);
     thunkAPI.dispatch(getAllJobs());
     return data;
   } catch (error) {
@@ -77,11 +62,6 @@ export const editJobThunk = async (
     const { data } = await customFetch.patch<IUpdatedJob>(
       `/jobs/${jobId}`,
       job,
-      {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-        },
-      },
     );
     thunkAPI.dispatch(clearValues());
     return data;
