@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "../../store";
 import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { updateUser } from "../../features/user/userSlice";
+import { useAppDispatch } from "../../hooks/useRTK";
 
 interface IUserData {
   name?: string;
@@ -18,7 +19,8 @@ interface IUserData {
 const Profile = (): ReactElement => {
   const { isLoading, user } = useSelector((store: RootState) => store.user);
 
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const [userData, setUserData] = useState<IUserData>({
     name: user?.name || "",
@@ -35,7 +37,7 @@ const Profile = (): ReactElement => {
       toast.error("please fill out all fields");
     }
 
-    dispatch(updateUser(userData)) as IUserData;
+    dispatch(updateUser(userData));
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {

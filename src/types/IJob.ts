@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { AppDispatch, RootState } from "../store";
 
 interface IErrorMsg {
@@ -29,20 +30,16 @@ interface IResponseData {
   job: IJobValues;
 }
 interface IJobValues {
-  company?: string;
-  createdAt?: string;
-  createdBy?: string;
-  jobLocation?: string;
-  jobType?: string;
-  position?: string;
-  status?: string;
-  updatedAt?: string;
-  __v?: number;
-  _id?: string;
-}
-
-interface IAllJobsResponse {
-  jobs: IResponseData[];
+  company: string;
+  createdAt: string;
+  createdBy: string;
+  jobLocation: string;
+  jobType: string;
+  position: string;
+  status: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
 }
 
 interface IJobTypes {
@@ -64,6 +61,20 @@ interface IThunkAPI {
   rejectWithValue: (msg?: string) => void;
 }
 
+interface IJobProps {
+  company: string;
+  createdAt: string;
+  jobLocation: string;
+  jobType: string;
+  position: string;
+  status: string;
+  _id: string;
+}
+interface IJobInfoProps {
+  icon: ReactElement;
+  text: string;
+}
+
 export type {
   IThunkAPI,
   IJobTypes,
@@ -71,9 +82,10 @@ export type {
   IJobKeys,
   IJobState,
   IJobValues,
+  IJobProps,
+  IJobInfoProps,
   IEditJob,
   IUpdatedJob,
   IResponseData,
   IResponseMsg,
-  IAllJobsResponse,
 };

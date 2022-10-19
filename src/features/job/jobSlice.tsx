@@ -6,12 +6,13 @@ import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
 import { logoutUser } from "../user/userSlice";
 import { showLoading, hideLoading, getAllJobs } from "../allJobs/allJobsSlice";
+import { AppDispatch, RootState } from "../../store";
 
 import {
   IErrorMsg,
+  IJobTypes,
   IJobKeys,
   IJobState,
-  IJobTypes,
   IThunkAPI,
   IResponseData,
   IEditJob,
@@ -19,26 +20,13 @@ import {
   IResponseMsg,
 } from "../../types/IJob";
 
-const initialState: IJobState = {
-  isLoading: false,
-  position: "",
-  company: "",
-  jobLocation: "",
-  jobTypeOptions: ["full-time", "part-time", "remove", "internship"],
-  jobType: "full-time",
-  statusOptions: ["interview", "declined", "pending"],
-  status: "pending",
-  isEditing: false,
-  editJobId: "",
-};
-
 export const createJob = createAsyncThunk<IResponseData, IJobTypes, IThunkAPI>(
   "job/createJob",
   async (job, thunkAPI) => {
     try {
       const { data } = await customFetch.post<IResponseData>("/jobs", job, {
         headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+          authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
         },
       });
       thunkAPI.dispatch(clearValues());
@@ -47,11 +35,11 @@ export const createJob = createAsyncThunk<IResponseData, IJobTypes, IThunkAPI>(
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
           thunkAPI.dispatch(logoutUser());
-          return thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
+          thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
         }
         if (error.response?.data) {
           const { msg }: IErrorMsg = error.response?.data;
-          return thunkAPI.rejectWithValue(msg);
+          thunkAPI.rejectWithValue(msg);
         }
       }
       throw error;
@@ -68,7 +56,7 @@ export const deleteJob = createAsyncThunk<IResponseMsg, string, IThunkAPI>(
         `/jobs/${jobId}`,
         {
           headers: {
-            authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+            authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
           },
         },
       );
@@ -78,7 +66,7 @@ export const deleteJob = createAsyncThunk<IResponseMsg, string, IThunkAPI>(
       thunkAPI.dispatch(hideLoading());
       if (axios.isAxiosError(error) && error.response?.data) {
         const { msg }: IErrorMsg = error.response.data;
-        return thunkAPI.rejectWithValue(msg);
+        thunkAPI.rejectWithValue(msg);
       }
       throw error;
     }
@@ -94,7 +82,7 @@ export const editJob = createAsyncThunk<IUpdatedJob, IEditJob, IThunkAPI>(
         job,
         {
           headers: {
-            authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+            authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
           },
         },
       );
@@ -103,18 +91,31 @@ export const editJob = createAsyncThunk<IUpdatedJob, IEditJob, IThunkAPI>(
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
         const { msg }: IErrorMsg = error.response?.data;
-        return thunkAPI.rejectWithValue(msg);
+        thunkAPI.rejectWithValue(msg);
       }
       throw error;
     }
   },
 );
 
-const jobSlice = createSlice({
+const initialState: IJobState = {
+  isLoading: false,
+  position: "",
+  company: "",
+  jobLocation: "",
+  jobTypeOptions: ["full-time", "part-time", "remove", "internship"],
+  jobType: "full-time",
+  statusOptions: ["interview", "declined", "pending"],
+  status: "pending",
+  isEditing: false,
+  editJobId: "",
+};
+
+export const jobSlice = createSlice({
   name: "job",
   initialState,
   reducers: {
-    handleChange: (state, action) => {
+    handleChange: (state: IJobState, action) => {
       const { name, value } = action.payload;
       state[name as keyof IJobKeys] = value;
     },

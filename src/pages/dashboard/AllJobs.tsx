@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 
 import { JobsContainer, SearchContainer } from "../../components";
 
-const AllJobs = (): ReactElement => {
+const AllJobs = () => {
   return (
     <>
       <SearchContainer />

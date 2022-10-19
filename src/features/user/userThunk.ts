@@ -5,6 +5,13 @@ import { logoutUser } from "./userSlice";
 import { IErrorMsg } from "../../types/IJob";
 import { AppDispatch, RootState } from "../../store";
 
+interface IThunkAPI {
+  state?: RootState;
+  dispatch: AppDispatch;
+  getState: () => RootState;
+  rejectWithValue: (msg?: string) => void;
+}
+
 interface IUserThunkParams {
   url: string;
   user: IUserFormInputs;
@@ -19,13 +26,6 @@ interface IUserFormInputs {
   name?: string;
   email?: string;
   password?: string;
-}
-
-interface IThunkAPI {
-  state?: RootState;
-  dispatch: AppDispatch;
-  getState: () => RootState;
-  rejectWithValue: (msg?: string) => void;
 }
 
 interface IUserResponse {
@@ -51,6 +51,8 @@ export const registerUserThunk = async ({
       const { msg }: IErrorMsg = error.response.data;
       thunkAPI.rejectWithValue(msg);
     }
+    console.log(error);
+
     throw error;
   }
 };
@@ -61,17 +63,26 @@ export const loginUserThunk = async ({
   thunkAPI,
 }: IUserThunkParams) => {
   try {
-    const resp = await customFetch.post<IUserResponse>(url, user);
+    const resp = await customFetch.post<any>(url, user);
     return resp.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const { msg }: IErrorMsg = error.response.data;
-      thunkAPI.rejectWithValue(msg);
-    }
+    // if (axios.isAxiosError(error) && error.response?.data) {
+    //   const { msg }: IErrorMsg = error.response.data;
+    //   thunkAPI.rejectWithValue(msg);
+    // }
+    console.log(error);
+
     throw error;
   }
 };
 
+interface IUserData {
+  email: string;
+  name: string;
+  lastName: string;
+  location: string;
+  token: string;
+}
 export const updateUserThunk = async ({
   url,
   user,
@@ -80,10 +91,12 @@ export const updateUserThunk = async ({
   try {
     const { data } = await customFetch.patch<IUserResponse>(url, user, {
       headers: {
-        authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+        authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
       },
     });
-    return data;
+    console.log(data);
+
+    return data.user as IUserData;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
@@ -92,6 +105,9 @@ export const updateUserThunk = async ({
       }
       thunkAPI.rejectWithValue((error.response?.data as IAxiosMsg).msg);
     }
+
+    console.log(error);
+
     throw error;
   }
 };

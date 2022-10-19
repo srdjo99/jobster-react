@@ -6,6 +6,7 @@ import Job from "./Job";
 import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/JobsContainer";
 import { getAllJobs } from "../features/allJobs/allJobsSlice";
+import { IJobState, IResponseData } from "../types/IJob";
 
 const JobsContainer = () => {
   const { jobs, isLoading } = useSelector((store: RootState) => store.allJobs);
@@ -29,7 +30,7 @@ const JobsContainer = () => {
     <Wrapper>
       <h5>jobs info</h5>
       <div className="jobs">
-        {jobs?.map((job: any) => {
+        {jobs.map((job) => {
           console.log(job);
           return <Job key={job._id} {...job} />;
         })}

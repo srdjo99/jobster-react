@@ -12,7 +12,7 @@ import {
   SharedLayout,
 } from "./pages/dashboard";
 
-function App(): ReactElement {
+function App() {
   return (
     <BrowserRouter>
       <Routes>

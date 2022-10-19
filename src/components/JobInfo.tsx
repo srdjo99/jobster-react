@@ -1,10 +1,7 @@
 import { ReactElement } from "react";
-import Wrapper from "../assets/wrappers/JobInfo";
 
-interface IJobInfoProps {
-  icon: ReactElement;
-  text: string;
-}
+import Wrapper from "../assets/wrappers/JobInfo";
+import { IJobInfoProps } from "../types/IJob";
 
 const JobInfo = ({ icon, text }: IJobInfoProps) => {
   return (

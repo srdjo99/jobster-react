@@ -2,10 +2,8 @@ import React, { ReactElement } from "react";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-import axios from "axios";
-
 import customFetch from "../../utils/axios";
-import { IThunkAPI } from "../../types/IJob";
+// import { IThunkAPI } from "../../types/IJob";
 import {
   addUserToLocalStorage,
   getUserFromLocalStorage,
@@ -16,27 +14,44 @@ import {
   registerUserThunk,
   updateUserThunk,
 } from "./userThunk";
+import { AppDispatch, RootState } from "../../store";
+import { IUser } from "../../types/IUser";
+
+export interface IThunkAPI {
+  state: RootState;
+  dispatch: AppDispatch;
+  getState: () => RootState;
+  rejectWithValue: (msg?: string) => void;
+}
+
+interface IUserResponse {
+  email: string;
+  name: string;
+  lastName: string;
+  location: string;
+  token: string;
+}
 
 interface IUserState {
-  isLoading: boolean;
-  isSidebarOpen: boolean;
-  user: any;
+  isLoading?: boolean;
+  isSidebarOpen?: boolean;
+  user: IUserData | null;
 }
 
 interface IUserFormInputs {
   name?: string;
+  lastname?: string;
+  location?: string;
   email?: string;
   password?: string;
 }
 
-const initialState: IUserState = {
-  isLoading: false,
-  isSidebarOpen: false,
-  user: getUserFromLocalStorage(),
-};
-
-interface IAxiosMsg {
-  msg: string;
+interface IUserData {
+  email: string;
+  name: string;
+  lastName: string;
+  location: string;
+  token: string;
 }
 
 interface IUserResponse {
@@ -49,32 +64,44 @@ interface IUserResponse {
   };
 }
 
-export const registerUser = createAsyncThunk<
-  IUserResponse,
-  IUserFormInputs,
-  IThunkAPI
->("user/registerUser", async (user, thunkAPI) => {
-  return await registerUserThunk({
-    url: "/auth/register",
-    user,
-    thunkAPI,
-  });
-});
+const initialState: IUserState = {
+  isLoading: false,
+  isSidebarOpen: false,
+  user: getUserFromLocalStorage(),
+};
 
-export const loginUser = createAsyncThunk<
-  IUserResponse,
-  IUserFormInputs,
-  IThunkAPI
->("user/loginUser", async (user, thunkAPI) => {
-  return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
-});
+export const registerUser = createAsyncThunk<any, IUserFormInputs, IThunkAPI>(
+  "user/registerUser",
+  async (user, thunkAPI: any) => {
+    return await registerUserThunk({
+      url: "/auth/register",
+      user,
+      thunkAPI,
+    });
+  },
+);
+
+export const loginUser = createAsyncThunk<any, IUserFormInputs, IThunkAPI>(
+  "user/loginUser",
+  async (user, thunkAPI: any) => {
+    return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
+  },
+);
 
 export const updateUser = createAsyncThunk<
-  IUserResponse,
+  IUserData,
   IUserFormInputs,
   IThunkAPI
 >("user/updateUser", async (user, thunkAPI) => {
-  return await updateUserThunk({ url: "/auth/updateUser", user, thunkAPI });
+  console.log(thunkAPI, "thunkara");
+  const data = await updateUserThunk({
+    url: "/auth/updateUser",
+    user,
+    thunkAPI,
+  });
+  console.log(data, "data");
+
+  return data;
 });
 
 const userSlice = createSlice({
@@ -84,7 +111,6 @@ const userSlice = createSlice({
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
     },
-    // eslint-disable-next-line
     logoutUser: (state, { payload }: PayloadAction<string | undefined>) => {
       state.user = null;
       state.isSidebarOpen = false;
@@ -130,8 +156,11 @@ const userSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(updateUser.fulfilled, (state, { payload }) => {
-      const { user } = payload;
       state.isLoading = false;
+      console.log(payload, state, "mocniii");
+      console.log(state.user, "stejt user");
+      const user = payload;
+
       state.user = user;
       addUserToLocalStorage(user);
       toast.success("User updated!");

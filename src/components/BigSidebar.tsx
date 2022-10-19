@@ -6,7 +6,7 @@ import NavLinks from "./NavLinks";
 import { RootState } from "../store";
 import Wrapper from "../assets/wrappers/BigSidebar";
 
-const BigSidebar = (): ReactElement => {
+const BigSidebar = () => {
   const { isSidebarOpen } = useSelector((store: RootState) => store.user);
 
   return (

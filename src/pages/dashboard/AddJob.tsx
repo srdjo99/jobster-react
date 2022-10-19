@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 import { FormRow, FormRowSelect } from "../../components";
-import { useAppDispatch, RootState } from "../../store";
+import { RootState, AppDispatch } from "../../store";
 import {
   handleChange,
   clearValues,
@@ -13,7 +13,7 @@ import {
 
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 
-const AddJob = (): ReactElement => {
+const AddJob = () => {
   const {
     isLoading,
     position,
@@ -27,7 +27,7 @@ const AddJob = (): ReactElement => {
     editJobId,
   } = useSelector((store: RootState) => store.job);
   const { user } = useSelector((store: RootState) => store.user);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -67,7 +67,7 @@ const AddJob = (): ReactElement => {
       dispatch(
         handleChange({
           name: "jobLocation",
-          value: user.location,
+          value: user?.location,
         }),
       );
     }

@@ -7,28 +7,18 @@ import { AppDispatch } from "../store";
 import Wrapper from "../assets/wrappers/Job";
 import JobInfo from "./JobInfo";
 import { deleteJob, setEditJob } from "../features/job/jobSlice";
-
-interface IJobProps {
-  _id: string;
-  company: string;
-  position: string;
-  status: string;
-  jobLocation: string;
-  jobType: string;
-  createdAt: string;
-}
+import { IJobProps } from "../types/IJob";
 
 const Job = ({
-  _id,
-  position,
+  createdAt,
   company,
   jobLocation,
   jobType,
-  createdAt,
+  position,
   status,
+  _id,
 }: IJobProps) => {
   const dispatch = useDispatch<AppDispatch>();
-
   const date = moment(createdAt).format("MMM Do, YYYY");
 
   return (
