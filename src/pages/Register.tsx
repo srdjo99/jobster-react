@@ -11,17 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
 import { IUserData } from "../types/IUser";
 
-interface IStoreState {
-  user: IUserData;
-  isLoading: boolean;
-}
-
-interface IUserFormInputs {
-  name?: string;
-  email?: string;
-  password?: string;
-}
-
 const initialState = {
   name: "",
   email: "",
@@ -104,6 +93,21 @@ const Register: FC = () => {
         />
         <button type="submit" className="btn btn-block" disabled={isLoading}>
           {isLoading ? "loading..." : "submit"}
+        </button>
+        <button
+          type="button"
+          className="btn btn-block btn-hipster"
+          disabled={isLoading}
+          onClick={() => {
+            dispatch(
+              loginUser({
+                email: process.env.REACT_APP_TESTUSER_EMAIL,
+                password: process.env.REACT_APP_TESTUSER_PASSWORD,
+              }),
+            );
+          }}
+        >
+          {isLoading ? "loading..." : "demo app"}
         </button>
         <p>
           {values.isMember ? "Not a member yet? " : "Already a member?"}

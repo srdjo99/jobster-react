@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { IUserData } from "../types/IUser";
 import { getUserFromLocalStorage } from "./localStorage";
 
