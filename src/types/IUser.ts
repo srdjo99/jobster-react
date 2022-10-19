@@ -7,6 +7,12 @@ interface IThunkAPI {
   rejectWithValue: (msg?: string) => void;
 }
 
+interface IUserThunkAPI {
+  dispatch: AppDispatch;
+  getState: () => RootState;
+  rejectWithValue: (msg?: string) => void;
+}
+
 interface IUserState {
   isLoading: boolean;
   isSidebarOpen: boolean;
@@ -27,6 +33,8 @@ interface IUserData {
   lastName: string;
   location: string;
   token?: string;
+  isMember?: boolean;
+  password?: string;
 }
 
 interface IUserThunkParams {
@@ -52,4 +60,5 @@ export type {
   IUserState,
   IUserThunkParams,
   IUserResponse,
+  IUserThunkAPI,
 };

@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from "react-icons/fa";
 
-import { AppDispatch } from "../store";
+// import { AppDispatch } from "../store";
+import { useAppDispatch } from "../hooks/useRTK";
 import Wrapper from "../assets/wrappers/Job";
 import JobInfo from "./JobInfo";
 import { deleteJob, setEditJob } from "../features/job/jobSlice";
@@ -18,7 +19,7 @@ const Job = ({
   status,
   _id,
 }: IJobProps) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const date = moment(createdAt).format("MMM Do, YYYY");
 
   return (

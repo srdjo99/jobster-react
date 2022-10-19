@@ -11,6 +11,7 @@ import {
   IUpdatedJob,
   IEditJob,
   IErrorMsg,
+  // IThunkAPI,
 } from "../../types/IJob";
 
 interface IThunkAPI {
@@ -18,6 +19,13 @@ interface IThunkAPI {
   getState: () => RootState;
   rejectWithValue: (msg?: string) => void;
 }
+
+// interface ICreateThunkAPI {
+//   state?: RootState;
+//   dispatch: AppDispatch;
+//   getState: () => RootState;
+//   rejectWithValue: (msg?: string) => void;
+// }
 
 export const createJobThunk = async (job: IJobTypes, thunkAPI: IThunkAPI) => {
   try {

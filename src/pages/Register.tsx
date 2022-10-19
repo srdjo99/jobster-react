@@ -8,9 +8,11 @@ import Wrapper from "../assets/wrappers/RegisterPage";
 import { loginUser, registerUser } from "../features/user/userSlice";
 import { AppDispatch } from "../store";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
+import { IUserData } from "../types/IUser";
 
 interface IStoreState {
-  user: any;
+  user: IUserData;
   isLoading: boolean;
 }
 
@@ -27,12 +29,12 @@ const initialState = {
   isMember: true,
 };
 
-const Register: FC = (): ReactElement => {
+const Register: FC = () => {
   const [values, setValues] = useState(initialState);
 
-  const { user, isLoading } = useSelector((store: IStoreState) => store.user);
+  const { user, isLoading } = useAppSelector((store) => store.user);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 

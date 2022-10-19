@@ -13,6 +13,8 @@ import {
 
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 
+import { useAppDispatch, useAppSelector } from "../../hooks/useRTK";
+
 const AddJob = () => {
   const {
     isLoading,
@@ -25,9 +27,9 @@ const AddJob = () => {
     statusOptions,
     isEditing,
     editJobId,
-  } = useSelector((store: RootState) => store.job);
-  const { user } = useSelector((store: RootState) => store.user);
-  const dispatch = useDispatch<AppDispatch>();
+  } = useAppSelector((store) => store.job);
+  const { user } = useAppSelector((store) => store.user);
+  const dispatch = useAppDispatch();
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

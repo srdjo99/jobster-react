@@ -17,7 +17,6 @@ import {
   IUserFormInputs,
   IUserState,
 } from "../../types/IUser";
-import { AppDispatch, RootState } from "../../store";
 
 const initialState: IUserState = {
   isLoading: false,
@@ -29,34 +28,19 @@ export const registerUser = createAsyncThunk<
   IUserData,
   IUserFormInputs,
   IThunkAPI
->("user/registerUser", async (user, thunkAPI) => {
-  return await registerUserThunk({
-    url: "/auth/register",
-    user,
-    thunkAPI,
-  });
-});
+>("user/registerUser", registerUserThunk);
 
 export const loginUser = createAsyncThunk<
   IUserData,
   IUserFormInputs,
   IThunkAPI
->("user/loginUser", async (user, thunkAPI) => {
-  return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
-});
+>("user/loginUser", loginUserThunk);
 
 export const updateUser = createAsyncThunk<
   IUserData,
   IUserFormInputs,
   IThunkAPI
->("user/updateUser", async (user, thunkAPI) => {
-  const data = await updateUserThunk({
-    url: "/auth/updateUser",
-    user,
-    thunkAPI,
-  });
-  return data;
-});
+>("user/updateUser", updateUserThunk);
 
 const userSlice = createSlice({
   name: "user",

@@ -7,10 +7,11 @@ import Logo from "./Logo";
 import Wrapper from "../assets/wrappers/SmallSidebar";
 import { toggleSidebar } from "../features/user/userSlice";
 import NavLinks from "./NavLinks";
+import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
 
 const SmallSidebar = (): ReactElement => {
-  const { isSidebarOpen } = useSelector((store: RootState) => store.user);
-  const dispatch = useDispatch();
+  const { isSidebarOpen } = useAppSelector((store) => store.user);
+  const dispatch = useAppDispatch();
 
   const toggle = (): void => {
     dispatch(toggleSidebar());

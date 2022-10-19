@@ -7,10 +7,11 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/JobsContainer";
 import { getAllJobs } from "../features/allJobs/allJobsSlice";
 import { IJobState, IResponseData } from "../types/IJob";
+import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
 
 const JobsContainer = () => {
-  const { jobs, isLoading } = useSelector((store: RootState) => store.allJobs);
-  const dispatch = useDispatch<AppDispatch>();
+  const { jobs, isLoading } = useAppSelector((store) => store.allJobs);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getAllJobs());

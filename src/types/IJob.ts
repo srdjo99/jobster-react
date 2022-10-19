@@ -61,6 +61,10 @@ interface IThunkAPI {
   rejectWithValue: (msg?: string) => void;
 }
 
+export interface test {
+  testApi: Promise<IThunkAPI>;
+}
+
 interface IJobProps {
   company: string;
   createdAt: string;

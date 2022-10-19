@@ -6,12 +6,12 @@ import { AppDispatch, RootState } from "../../store";
 import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { updateUser } from "../../features/user/userSlice";
-import { useAppDispatch } from "../../hooks/useRTK";
+import { useAppDispatch, useAppSelector } from "../../hooks/useRTK";
 import { IUserData } from "../../types/IUser";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
-  const { isLoading, user } = useSelector((store: RootState) => store.user);
+  const { isLoading, user } = useAppSelector((store) => store.user);
 
   const [userData, setUserData] = useState<IUserData>({
     name: user?.name ?? "",
