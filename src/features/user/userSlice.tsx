@@ -1,9 +1,6 @@
-import React, { ReactElement } from "react";
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-import customFetch from "../../utils/axios";
-// import { IThunkAPI } from "../../types/IJob";
 import {
   addUserToLocalStorage,
   getUserFromLocalStorage,
@@ -14,55 +11,12 @@ import {
   registerUserThunk,
   updateUserThunk,
 } from "./userThunk";
-import { AppDispatch, RootState } from "../../store";
-import { IUser } from "../../types/IUser";
-
-export interface IThunkAPI {
-  state: RootState;
-  dispatch: AppDispatch;
-  getState: () => RootState;
-  rejectWithValue: (msg?: string) => void;
-}
-
-interface IUserResponse {
-  email: string;
-  name: string;
-  lastName: string;
-  location: string;
-  token: string;
-}
-
-interface IUserState {
-  isLoading?: boolean;
-  isSidebarOpen?: boolean;
-  user: IUserData | null;
-}
-
-interface IUserFormInputs {
-  name?: string;
-  lastname?: string;
-  location?: string;
-  email?: string;
-  password?: string;
-}
-
-interface IUserData {
-  email: string;
-  name: string;
-  lastName: string;
-  location: string;
-  token: string;
-}
-
-interface IUserResponse {
-  user: {
-    email: string;
-    name: string;
-    lastName: string;
-    location: string;
-    token: string;
-  };
-}
+import {
+  IThunkAPI,
+  IUserData,
+  IUserFormInputs,
+  IUserState,
+} from "../../types/IUser";
 
 const initialState: IUserState = {
   isLoading: false,
@@ -70,37 +24,36 @@ const initialState: IUserState = {
   user: getUserFromLocalStorage(),
 };
 
-export const registerUser = createAsyncThunk<any, IUserFormInputs, IThunkAPI>(
-  "user/registerUser",
-  async (user, thunkAPI: any) => {
-    return await registerUserThunk({
-      url: "/auth/register",
-      user,
-      thunkAPI,
-    });
-  },
-);
+export const registerUser = createAsyncThunk<
+  IUserData,
+  IUserFormInputs,
+  IThunkAPI
+>("user/registerUser", async (user, thunkAPI) => {
+  return await registerUserThunk({
+    url: "/auth/register",
+    user,
+    thunkAPI,
+  });
+});
 
-export const loginUser = createAsyncThunk<any, IUserFormInputs, IThunkAPI>(
-  "user/loginUser",
-  async (user, thunkAPI: any) => {
-    return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
-  },
-);
+export const loginUser = createAsyncThunk<
+  IUserData,
+  IUserFormInputs,
+  IThunkAPI
+>("user/loginUser", async (user, thunkAPI) => {
+  return await loginUserThunk({ url: "/auth/login", user, thunkAPI });
+});
 
 export const updateUser = createAsyncThunk<
   IUserData,
   IUserFormInputs,
   IThunkAPI
 >("user/updateUser", async (user, thunkAPI) => {
-  console.log(thunkAPI, "thunkara");
   const data = await updateUserThunk({
     url: "/auth/updateUser",
     user,
     thunkAPI,
   });
-  console.log(data, "data");
-
   return data;
 });
 
@@ -123,8 +76,7 @@ const userSlice = createSlice({
     builder.addCase(registerUser.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      const { user } = action.payload;
+    builder.addCase(registerUser.fulfilled, (state, { payload: user }) => {
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
@@ -139,8 +91,7 @@ const userSlice = createSlice({
     builder.addCase(loginUser.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      const { user } = action.payload;
+    builder.addCase(loginUser.fulfilled, (state, { payload: user }) => {
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
@@ -155,12 +106,8 @@ const userSlice = createSlice({
     builder.addCase(updateUser.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
+    builder.addCase(updateUser.fulfilled, (state, { payload: user }) => {
       state.isLoading = false;
-      console.log(payload, state, "mocniii");
-      console.log(state.user, "stejt user");
-      const user = payload;
-
       state.user = user;
       addUserToLocalStorage(user);
       toast.success("User updated!");

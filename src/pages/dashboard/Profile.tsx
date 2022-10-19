@@ -23,10 +23,10 @@ const Profile = (): ReactElement => {
   const dispatch = useAppDispatch();
 
   const [userData, setUserData] = useState<IUserData>({
-    name: user?.name || "",
-    email: user?.email || "",
-    lastName: user?.lastName || "",
-    location: user?.location || "",
+    name: user?.name ?? "",
+    email: user?.email ?? "",
+    lastName: user?.lastName ?? "",
+    location: user?.location ?? "",
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
