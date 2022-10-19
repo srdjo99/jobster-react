@@ -5,8 +5,9 @@ import { logoutUser } from "./userSlice";
 import { IErrorMsg } from "../../types/IJob";
 import { AppDispatch, RootState } from "../../store";
 
+// import { IThunkAPI } from "../../types/IUser";
+
 interface IThunkAPI {
-  state?: RootState;
   dispatch: AppDispatch;
   getState: () => RootState;
   rejectWithValue: (msg?: string) => void;
@@ -44,15 +45,15 @@ export const registerUserThunk = async ({
   thunkAPI,
 }: IUserThunkParams) => {
   try {
+    console.log(thunkAPI.getState(), "userThunks");
+
     const { data } = await customFetch.post<IUserResponse>(url, user);
     return data.user;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
       const { msg }: IErrorMsg = error.response.data;
-      thunkAPI.rejectWithValue(msg);
+      // thunkAPI.rejectWithValue(msg);
     }
-    console.log(error);
-
     throw error;
   }
 };
@@ -68,19 +69,12 @@ export const loginUserThunk = async ({
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data) {
       const { msg }: IErrorMsg = error.response.data;
-      thunkAPI.rejectWithValue(msg);
+      // thunkAPI.rejectWithValue(msg);
     }
     throw error;
   }
 };
 
-interface IUserData {
-  email: string;
-  name: string;
-  lastName: string;
-  location: string;
-  token: string;
-}
 export const updateUserThunk = async ({
   url,
   user,
@@ -97,9 +91,9 @@ export const updateUserThunk = async ({
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         thunkAPI.dispatch(logoutUser());
-        thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
+        // thunkAPI.rejectWithValue("Unauthorized! Loggin Out...");
       }
-      thunkAPI.rejectWithValue((error.response?.data as IAxiosMsg).msg);
+      // thunkAPI.rejectWithValue((error.response?.data as IAxiosMsg).msg);
     }
     throw error;
   }

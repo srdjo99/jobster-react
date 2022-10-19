@@ -1,15 +1,10 @@
-import axios from "axios";
 import { toast } from "react-toastify";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
-import { logoutUser } from "../user/userSlice";
-import { showLoading, hideLoading, getAllJobs } from "../allJobs/allJobsSlice";
-import { AppDispatch, RootState } from "../../store";
+import { createJobThunk, deleteJobThunk, editJobThunk } from "./jobThunk";
 
 import {
-  IErrorMsg,
   IJobTypes,
   IJobKeys,
   IJobState,
@@ -22,80 +17,17 @@ import {
 
 export const createJob = createAsyncThunk<IResponseData, IJobTypes, IThunkAPI>(
   "job/createJob",
-  async (job, thunkAPI) => {
-    try {
-      const { data } = await customFetch.post<IResponseData>("/jobs", job, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-        },
-      });
-      thunkAPI.dispatch(clearValues());
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          thunkAPI.dispatch(logoutUser());
-          thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
-        }
-        if (error.response?.data) {
-          const { msg }: IErrorMsg = error.response?.data;
-          thunkAPI.rejectWithValue(msg);
-        }
-      }
-      throw error;
-    }
-  },
+  createJobThunk,
 );
 
 export const deleteJob = createAsyncThunk<IResponseMsg, string, IThunkAPI>(
   "job/deleteJob",
-  async (jobId, thunkAPI) => {
-    thunkAPI.dispatch(showLoading());
-    try {
-      const { data } = await customFetch.delete<IResponseMsg>(
-        `/jobs/${jobId}`,
-        {
-          headers: {
-            authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-          },
-        },
-      );
-      thunkAPI.dispatch(getAllJobs());
-      return data;
-    } catch (error) {
-      thunkAPI.dispatch(hideLoading());
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const { msg }: IErrorMsg = error.response.data;
-        thunkAPI.rejectWithValue(msg);
-      }
-      throw error;
-    }
-  },
+  deleteJobThunk,
 );
 
 export const editJob = createAsyncThunk<IUpdatedJob, IEditJob, IThunkAPI>(
   "job/editJob",
-  async ({ jobId, job }, thunkAPI) => {
-    try {
-      const { data } = await customFetch.patch<IUpdatedJob>(
-        `/jobs/${jobId}`,
-        job,
-        {
-          headers: {
-            authorization: `Bearer ${thunkAPI.getState().user.user?.token}`,
-          },
-        },
-      );
-      thunkAPI.dispatch(clearValues());
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const { msg }: IErrorMsg = error.response?.data;
-        thunkAPI.rejectWithValue(msg);
-      }
-      throw error;
-    }
-  },
+  editJobThunk,
 );
 
 const initialState: IJobState = {

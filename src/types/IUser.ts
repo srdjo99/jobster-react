@@ -26,7 +26,30 @@ interface IUserData {
   name: string;
   lastName: string;
   location: string;
-  token: string;
+  token?: string;
 }
 
-export type { IThunkAPI, IUserData, IUserFormInputs, IUserState };
+interface IUserThunkParams {
+  url: string;
+  user: IUserFormInputs;
+  thunkAPI: IThunkAPI;
+}
+
+interface IUserResponse {
+  user: {
+    email: string;
+    name: string;
+    lastName: string;
+    location: string;
+    token: string;
+  };
+}
+
+export type {
+  IThunkAPI,
+  IUserData,
+  IUserFormInputs,
+  IUserState,
+  IUserThunkParams,
+  IUserResponse,
+};

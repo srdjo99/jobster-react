@@ -27,7 +27,7 @@ interface IEditJob {
   job?: IJobState;
 }
 interface IResponseData {
-  job: IJobValues;
+  job?: IJobState;
 }
 interface IJobValues {
   company: string;

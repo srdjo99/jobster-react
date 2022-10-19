@@ -7,20 +7,11 @@ import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { updateUser } from "../../features/user/userSlice";
 import { useAppDispatch } from "../../hooks/useRTK";
+import { IUserData } from "../../types/IUser";
 
-interface IUserData {
-  name?: string;
-  email?: string;
-  lastName?: string;
-  location?: string;
-  password?: string;
-}
-
-const Profile = (): ReactElement => {
-  const { isLoading, user } = useSelector((store: RootState) => store.user);
-
-  // const dispatch = useDispatch<AppDispatch>();
+const Profile = () => {
   const dispatch = useAppDispatch();
+  const { isLoading, user } = useSelector((store: RootState) => store.user);
 
   const [userData, setUserData] = useState<IUserData>({
     name: user?.name ?? "",

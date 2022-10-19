@@ -17,6 +17,7 @@ import {
   IUserFormInputs,
   IUserState,
 } from "../../types/IUser";
+import { AppDispatch, RootState } from "../../store";
 
 const initialState: IUserState = {
   isLoading: false,

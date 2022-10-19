@@ -1,10 +1,4 @@
-interface IUserData {
-  email: string;
-  name: string;
-  lastName: string;
-  location: string;
-  token: string;
-}
+import { IUserData } from "../types/IUser";
 
 export const addUserToLocalStorage = (user: IUserData) => {
   localStorage.setItem("user", JSON.stringify(user));
