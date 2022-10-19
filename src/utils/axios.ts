@@ -2,8 +2,10 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { IUserData } from "../types/IUser";
 import { getUserFromLocalStorage } from "./localStorage";
 
+const baseURL = process.env.REACT_APP_BASE_ENDPOINT_URL;
+
 const customFetch = axios.create({
-  baseURL: "https://jobify-prod.herokuapp.com/api/v1/toolkit",
+  baseURL,
 });
 
 customFetch.interceptors.request.use(
