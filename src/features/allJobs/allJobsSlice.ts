@@ -80,9 +80,11 @@ const allJobsSlice = createSlice({
     builder.addCase(getAllJobs.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(getAllJobs.fulfilled, (state, action) => {
+    builder.addCase(getAllJobs.fulfilled, (state, { payload }) => {
       state.isLoading = false;
-      state.jobs = action.payload.jobs;
+      state.jobs = payload.jobs;
+      state.numOfPages = payload.numOfPages;
+      state.totalJobs = payload.totalJobs;
     });
     builder.addCase(getAllJobs.rejected, (state, { payload }) => {
       state.isLoading = false;
