@@ -8,14 +8,22 @@ import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
 import PageBtnContainer from "./PageBtnContainer";
 
 const JobsContainer = () => {
-  const { jobs, isLoading, page, totalJobs, numOfPages } = useAppSelector(
-    (store) => store.allJobs,
-  );
+  const {
+    jobs,
+    isLoading,
+    page,
+    totalJobs,
+    numOfPages,
+    search,
+    searchStatus,
+    searchType,
+    sort,
+  } = useAppSelector((store) => store.allJobs);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getAllJobs());
-  }, []);
+  }, [page, search, searchStatus, searchType, sort]);
 
   if (isLoading) return <Loading center />;
 

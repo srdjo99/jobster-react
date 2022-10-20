@@ -34,8 +34,13 @@ export const getAllJobs = createAsyncThunk<
   undefined,
   IThunkAPI
 >("allJobs/getJobs", async (_, thunkAPI) => {
-  // eslint-disable-next-line
-  let url = `/jobs`;
+  const { page, search, searchStatus, searchType, sort } =
+    thunkAPI.getState().allJobs;
+
+  let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}&page=${page}`;
+  if (search) {
+    url = url + `&search=${search}`;
+  }
   try {
     const { data } = await customFetch.get<IAllJobsResponse>(url);
     return data;
