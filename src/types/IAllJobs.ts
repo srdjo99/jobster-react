@@ -25,7 +25,7 @@ interface IAllJobsFilters {
   searchStatus: string;
   searchType: string;
   sort: string;
-  sortOptions: string[];
+  sortOptions?: string[];
 }
 
 interface IAllJobsState extends IAllJobsFilters {

@@ -1,7 +1,10 @@
+import { ChangeEvent, FormEvent } from "react";
+
 import FormRow from "./FormRow";
 import Wrapper from "../assets/wrappers/SearchContainer";
 import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
 import FormRowSelect from "./FormRowSelect";
+import { handleChange, clearFilters } from "../features/allJobs/allJobsSlice";
 
 const SearchContainer = () => {
   const { isLoading, search, searchStatus, searchType, sort, sortOptions } =
@@ -11,9 +14,13 @@ const SearchContainer = () => {
   );
   const dispatch = useAppDispatch();
 
-  const handleSearch = (e: any) => {};
-  const handleSubmit = (e: any) => {
+  const handleSearch = (e: ChangeEvent<{ name: string; value: string }>) => {
+    // is loading check later
+    dispatch(handleChange({ name: e.target.name, value: e.target.value }));
+  };
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    dispatch(clearFilters());
   };
 
   return (

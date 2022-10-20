@@ -9,7 +9,6 @@ import {
   IThunkAPI,
 } from "../../types/IAllJobs";
 import { IStats } from "../../types/IStats";
-import { Stats } from "../../pages/dashboard";
 
 const initialFiltersState: IAllJobsFilters = {
   search: "",
@@ -68,6 +67,13 @@ const allJobsSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
+    handleChange: (state, { payload: { name, value } }) => {
+      // state.page = 1 later
+      state[name as keyof IAllJobsFilters] = value;
+    },
+    clearFilters: (state) => {
+      return { ...state, ...initialFiltersState };
+    },
   },
   // all jobs
   extraReducers: (builder) => {
@@ -98,6 +104,7 @@ const allJobsSlice = createSlice({
   },
 });
 
-export const { showLoading, hideLoading } = allJobsSlice.actions;
+export const { showLoading, hideLoading, handleChange, clearFilters } =
+  allJobsSlice.actions;
 
 export default allJobsSlice.reducer;
