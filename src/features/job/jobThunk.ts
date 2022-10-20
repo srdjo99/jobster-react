@@ -70,7 +70,6 @@ export const editJobThunk = async (
       const { msg }: IErrorMsg = error.response?.data;
       thunkAPI.rejectWithValue(msg);
     }
-    console.log(error);
 
     throw error;
   }
