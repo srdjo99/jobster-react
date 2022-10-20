@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from "../store";
-import { IDefaultStats, IMonthlyApplications } from "./IStats";
+import { IDefaultStatsState, IMonthlyApplications } from "./IStats";
 
 interface IJobValues {
   company: string;
@@ -34,7 +34,7 @@ interface IAllJobsState {
   totalJobs: number;
   numOfPages: number;
   page: number;
-  stats: IDefaultStats;
+  stats: IDefaultStatsState;
   monthlyApplications: IMonthlyApplications[];
 }
 

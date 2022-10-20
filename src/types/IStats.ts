@@ -1,4 +1,5 @@
-interface IDefaultStats {
+import { ReactElement } from "react";
+interface IDefaultStatsState {
   pending?: number;
   interview?: number;
   declined?: number;
@@ -9,9 +10,37 @@ interface IMonthlyApplications {
   count: number;
 }
 
+interface IDefaultStats {
+  title: string;
+  count: number;
+  icon: ReactElement;
+  color: string;
+  bcg: string;
+}
+
 interface IStats {
-  defaultStats: IDefaultStats;
+  defaultStats: IDefaultStatsState;
   monthlyApplications: IMonthlyApplications[];
 }
 
-export type { IDefaultStats, IMonthlyApplications, IStats };
+interface IStatItemProps {
+  title: string;
+  count: number;
+  icon: ReactElement;
+  color: string;
+  bcg: string;
+}
+
+interface IStyledStatItemProps {
+  color: string;
+  bcg: string;
+}
+
+export type {
+  IStats,
+  IDefaultStats,
+  IStatItemProps,
+  IDefaultStatsState,
+  IStyledStatItemProps,
+  IMonthlyApplications,
+};

@@ -1,7 +1,8 @@
-import BigSidebar from "./BigSidebar";
-import FormRow from "./FormRow";
 import Logo from "./Logo";
 import Navbar from "./Navbar";
+import FormRow from "./FormRow";
+import Loading from "./Loading";
+import BigSidebar from "./BigSidebar";
 import SmallSidebar from "./SmallSidebar";
 import FormRowSelect from "./FormRowSelect";
 import JobsContainer from "./JobsContainer";
@@ -12,6 +13,7 @@ import ChartsContainer from "./ChartsContainer";
 export {
   FormRow,
   Logo,
+  Loading,
   BigSidebar,
   SmallSidebar,
   Navbar,

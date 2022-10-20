@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { IStyledStatItemProps } from "../../types/IStats";
 
-const Wrapper = styled.article`
+const Wrapper = styled.article<IStyledStatItemProps>`
   padding: 2rem;
   background: var(--white);
   border-radius: var(--borderRadius);
@@ -26,6 +27,7 @@ const Wrapper = styled.article`
   .icon {
     width: 70px;
     height: 60px;
+    background: ${({ bcg }: any) => bcg};
     border-radius: var(--borderRadius);
     display: flex;
     align-items: center;
@@ -36,7 +38,5 @@ const Wrapper = styled.article`
     }
   }
 `;
-// needs to be placed inside icon code block
-/* background: ${(props) => props.bcg}; */
 
 export default Wrapper;
