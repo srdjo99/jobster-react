@@ -1,4 +1,5 @@
 import Wrapper from "../assets/wrappers/PageBtnContainer";
+import { changePage } from "../features/allJobs/allJobsSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/useRTK";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 
@@ -11,11 +12,19 @@ const PageBtnContainer = () => {
   });
 
   const nextPage = () => {
-    console.log("nextPage");
+    let newPage = page + 1;
+    if (newPage > numOfPages) {
+      newPage = 1;
+    }
+    dispatch(changePage(newPage));
   };
 
   const prevPage = () => {
-    console.log("prevPage");
+    let newPage = page - 1;
+    if (newPage < 1) {
+      newPage = numOfPages;
+    }
+    dispatch(changePage(newPage));
   };
 
   return (
@@ -24,18 +33,21 @@ const PageBtnContainer = () => {
         <HiChevronDoubleLeft />
         prev
       </button>
-      {pages.map((pageNumber) => {
-        return (
-          <button
-            type="button"
-            key={pageNumber}
-            className={pageNumber === page ? "pageBtn active" : "pageBtn"}
-            onClick={() => console.log("change page")}
-          >
-            {pageNumber}
-          </button>
-        );
-      })}
+      <div className="btn-container">
+        {pages.map((pageNumber) => {
+          return (
+            <button
+              type="button"
+              key={pageNumber}
+              className={pageNumber === page ? "pageBtn active" : "pageBtn"}
+              onClick={() => dispatch(changePage(pageNumber))}
+            >
+              {pageNumber}
+            </button>
+          );
+        })}
+      </div>
+
       <button type="button" className="next-btn" onClick={nextPage}>
         <HiChevronDoubleRight />
         next
