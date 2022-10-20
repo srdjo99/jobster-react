@@ -28,7 +28,7 @@ interface IAllJobsFilters {
   sortOptions: string[];
 }
 
-interface IAllJobsState {
+interface IAllJobsState extends IAllJobsFilters {
   isLoading: boolean;
   jobs: IJobValues[];
   totalJobs: number;
