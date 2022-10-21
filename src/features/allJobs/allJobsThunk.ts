@@ -1,7 +1,7 @@
-import { AppDispatch, RootState } from "../../store";
-import { IAllJobsResponse } from "../../types/IAllJobs";
 import { IStats } from "../../types/IStats";
-import customFetch from "../../utils/axios";
+import { IAllJobsResponse } from "../../types/IAllJobs";
+import { AppDispatch, RootState } from "../../store";
+import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 
 interface IThunkAPI {
   dispatch: AppDispatch;
@@ -22,7 +22,7 @@ export const getAllJobsThunk = async (_: any, thunkAPI: IThunkAPI) => {
     const { data } = await customFetch.get<IAllJobsResponse>(url);
     return data;
   } catch (error) {
-    thunkAPI.rejectWithValue("There was an error");
+    checkForUnauthorizedResponse(error, thunkAPI);
     throw error;
   }
 };
@@ -32,7 +32,7 @@ export const showStatsThunk = async (_: undefined, thunkAPI: IThunkAPI) => {
     const { data } = await customFetch.get<IStats>("/jobs/stats");
     return data;
   } catch (error) {
-    thunkAPI.rejectWithValue("Show stats error");
+    checkForUnauthorizedResponse(error, thunkAPI);
     throw error;
   }
 };

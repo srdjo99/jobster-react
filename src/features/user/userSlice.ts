@@ -44,10 +44,11 @@ export const updateUser = createAsyncThunk<
   IThunkAPI
 >("user/updateUser", updateUserThunk);
 
-export const clearStore = createAsyncThunk<Promise<any>, string, IThunkAPI>(
-  "user/clearStore",
-  clearStoreThunk,
-);
+export const clearStore = createAsyncThunk<
+  unknown,
+  string | undefined,
+  IThunkAPI
+>("user/clearStore", clearStoreThunk);
 
 const userSlice = createSlice({
   name: "user",

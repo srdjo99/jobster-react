@@ -1,4 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { toast } from "react-toastify";
+import { clearStore } from "../features/user/userSlice";
 import { IUserData } from "../types/IUser";
 import { getUserFromLocalStorage } from "./localStorage";
 
@@ -18,5 +20,13 @@ customFetch.interceptors.request.use(
   },
   (error) => error,
 );
+
+export const checkForUnauthorizedResponse = (error: any, thunkAPI: any) => {
+  if (error.response.status === 401) {
+    thunkAPI.dispatch(clearStore());
+    toast.error("Unauthorized! Logging Out...");
+  }
+  thunkAPI.rejectWithValue(error.response.data.msg);
+};
 
 export default customFetch;

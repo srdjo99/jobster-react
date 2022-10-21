@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import customFetch from "../../utils/axios";
+import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 import { logoutUser } from "./userSlice";
 import { IErrorMsg } from "../../types/IJob";
 import {
@@ -48,7 +48,7 @@ export const loginUserThunk = async (
 
 export const updateUserThunk = async (
   user: IUserFormInputs,
-  { getState, dispatch, rejectWithValue }: IUserThunkAPI,
+  thunkAPI: IUserThunkAPI,
 ) => {
   try {
     const { data } = await customFetch.patch<IUserResponse>(
@@ -57,29 +57,28 @@ export const updateUserThunk = async (
     );
     return data.user;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        dispatch(logoutUser());
-        rejectWithValue("Unauthorized! Loggin Out...");
-      }
-      rejectWithValue((error.response?.data as IErrorMsg).msg);
-    }
+    // if (axios.isAxiosError(error)) {
+    //   if (error.response?.status === 401) {
+    //     dispatch(logoutUser());
+    //     rejectWithValue("Unauthorized! Loggin Out...");
+    //   }
+    //   rejectWithValue((error.response?.data as IErrorMsg).msg);
+    // }
+    checkForUnauthorizedResponse(error, thunkAPI);
     throw error;
   }
 };
 
-export const clearStoreThunk = async (
-  message: string,
+export const clearStoreThunk = (
+  message: string | undefined,
   thunkAPI: IUserThunkAPI,
 ) => {
   try {
     thunkAPI.dispatch(logoutUser(message));
     thunkAPI.dispatch(clearAllJobsState());
     thunkAPI.dispatch(clearValues());
-    console.log(await Promise.resolve(), "promise");
-
-    return await Promise.resolve();
   } catch (error) {
-    return await Promise.reject(error);
+    console.log(error);
+    throw error;
   }
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import customFetch from "../../utils/axios";
+import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 import { clearValues } from "./jobSlice";
 import { logoutUser } from "../user/userSlice";
 import { AppDispatch, RootState } from "../../store";
@@ -26,16 +26,17 @@ export const createJobThunk = async (job: IJobTypes, thunkAPI: IThunkAPI) => {
     thunkAPI.dispatch(clearValues());
     return data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        thunkAPI.dispatch(logoutUser());
-        thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
-      }
-      if (error.response?.data) {
-        const { msg }: IErrorMsg = error.response?.data;
-        thunkAPI.rejectWithValue(msg);
-      }
-    }
+    // if (axios.isAxiosError(error)) {
+    //   if (error.response?.status === 401) {
+    //     thunkAPI.dispatch(logoutUser());
+    //     thunkAPI.rejectWithValue("Unauthorized! Logging Out...");
+    //   }
+    //   if (error.response?.data) {
+    //     const { msg }: IErrorMsg = error.response?.data;
+    //     thunkAPI.rejectWithValue(msg);
+    //   }
+    // }
+    checkForUnauthorizedResponse(error, thunkAPI);
     throw error;
   }
 };
@@ -47,10 +48,11 @@ export const deleteJobThunk = async (jobId: string, thunkAPI: IThunkAPI) => {
     return data;
   } catch (error) {
     thunkAPI.dispatch(hideLoading());
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const { msg }: IErrorMsg = error.response.data;
-      thunkAPI.rejectWithValue(msg);
-    }
+    // if (axios.isAxiosError(error) && error.response?.data) {
+    //   const { msg }: IErrorMsg = error.response.data;
+    //   thunkAPI.rejectWithValue(msg);
+    // }
+    checkForUnauthorizedResponse(error, thunkAPI);
     throw error;
   }
 };
@@ -66,11 +68,11 @@ export const editJobThunk = async (
     thunkAPI.dispatch(clearValues());
     return data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const { msg }: IErrorMsg = error.response?.data;
-      thunkAPI.rejectWithValue(msg);
-    }
-
+    // if (axios.isAxiosError(error) && error.response?.data) {
+    //   const { msg }: IErrorMsg = error.response?.data;
+    //   thunkAPI.rejectWithValue(msg);
+    // }
+    checkForUnauthorizedResponse(error, thunkAPI);
     throw error;
   }
 };
