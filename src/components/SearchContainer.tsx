@@ -15,7 +15,7 @@ const SearchContainer = () => {
   const dispatch = useAppDispatch();
 
   const handleSearch = (e: ChangeEvent<{ name: string; value: string }>) => {
-    // is loading check later
+    if (isLoading) return;
     dispatch(handleChange({ name: e.target.name, value: e.target.value }));
   };
   const handleSubmit = (e: FormEvent) => {
