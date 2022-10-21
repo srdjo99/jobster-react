@@ -7,6 +7,7 @@ import {
   removeUserFromLocalStorage,
 } from "../../utils/localStorage";
 import {
+  clearStoreThunk,
   loginUserThunk,
   registerUserThunk,
   updateUserThunk,
@@ -17,6 +18,7 @@ import {
   IUserFormInputs,
   IUserState,
 } from "../../types/IUser";
+import { clear } from "console";
 
 const initialState: IUserState = {
   isLoading: false,
@@ -41,6 +43,11 @@ export const updateUser = createAsyncThunk<
   IUserFormInputs,
   IThunkAPI
 >("user/updateUser", updateUserThunk);
+
+export const clearStore = createAsyncThunk<Promise<any>, string, IThunkAPI>(
+  "user/clearStore",
+  clearStoreThunk,
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -100,6 +107,11 @@ const userSlice = createSlice({
     builder.addCase(updateUser.rejected, (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload as string);
+    });
+
+    // clear store
+    builder.addCase(clearStore.rejected, () => {
+      toast.error("There was an error while clearing up store");
     });
   },
 });

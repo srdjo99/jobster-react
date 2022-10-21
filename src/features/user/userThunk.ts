@@ -8,6 +8,8 @@ import {
   IUserFormInputs,
   IUserResponse,
 } from "../../types/IUser";
+import { clearAllJobsState } from "../allJobs/allJobsSlice";
+import { clearValues } from "../job/jobSlice";
 
 export const registerUserThunk = async (
   user: IUserFormInputs,
@@ -63,5 +65,21 @@ export const updateUserThunk = async (
       rejectWithValue((error.response?.data as IErrorMsg).msg);
     }
     throw error;
+  }
+};
+
+export const clearStoreThunk = async (
+  message: string,
+  thunkAPI: IUserThunkAPI,
+) => {
+  try {
+    thunkAPI.dispatch(logoutUser(message));
+    thunkAPI.dispatch(clearAllJobsState());
+    thunkAPI.dispatch(clearValues());
+    console.log(await Promise.resolve(), "promise");
+
+    return await Promise.resolve();
+  } catch (error) {
+    return await Promise.reject(error);
   }
 };
