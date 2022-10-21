@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-import customFetch from "../../utils/axios";
+import { IStats } from "../../types/IStats";
+import { getAllJobsThunk, showStatsThunk } from "./allJobsThunk";
 import {
   IAllJobsFilters,
   IAllJobsState,
   IAllJobsResponse,
   IThunkAPI,
 } from "../../types/IAllJobs";
-import { IStats } from "../../types/IStats";
 
 const initialFiltersState: IAllJobsFilters = {
   search: "",
@@ -33,33 +33,11 @@ export const getAllJobs = createAsyncThunk<
   IAllJobsResponse,
   undefined,
   IThunkAPI
->("allJobs/getJobs", async (_, thunkAPI) => {
-  const { page, search, searchStatus, searchType, sort } =
-    thunkAPI.getState().allJobs;
+>("allJobs/getJobs", getAllJobsThunk);
 
-  let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}&page=${page}`;
-  if (search) {
-    url = url + `&search=${search}`;
-  }
-  try {
-    const { data } = await customFetch.get<IAllJobsResponse>(url);
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue("There was an error");
-  }
-});
-
-export const showStats = createAsyncThunk<IStats, undefined>(
+export const showStats = createAsyncThunk<IStats, undefined, IThunkAPI>(
   "allJobs/showStats",
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await customFetch.get<IStats>("/jobs/stats");
-      return data;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  },
+  showStatsThunk,
 );
 
 const allJobsSlice = createSlice({
