@@ -8,6 +8,15 @@ Jobster is a job managament app where you can create, edit, update and delete jo
  You can click on **Test User** and the fake data that is already inserted will be displayed. ( This feature is READ-ONLY )
 ##### You must create an account and log in if you want to create jobs, edit profile, etc...
 
+I've also used:
+  - React Router 6
+  - Redux Toolkit
+  - Styled-components
+  - React-toastify for notifications
+  - Axios
+  - React-icons
+  - [API Link](https://jobify-prod.herokuapp.com/api/v1/toolkit)
+
 ## Available Scripts
 
 If you want to spin it up locally, you can run:
